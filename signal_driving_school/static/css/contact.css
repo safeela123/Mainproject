@@ -1,0 +1,22 @@
+*{
+    margin:0px;
+}
+.main{
+    height:100vh;
+    width:100%;
+    background:#222;
+}
+.sub{
+    width:60%;
+    height:80vh;
+     color:white;
+    position:relative;
+    top:20%;
+    left:50%;
+}
+.btn{
+    background-color: blueviolet;
+    color:black;
+    width:200px;
+    height:30px;
+}

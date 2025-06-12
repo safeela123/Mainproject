@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/admission.css' %}">
+</head>
+<body>
+    <div class="main">
+        <div class="nav">
+            <div class="signal"> <h2>signal</h2> </div>
+            <div class="sub">
+                {% if user.is_authenticated %}
+                <div class="admission"><a href="../admission">Admission</a></div>
+                <div class="section"><a href="">Section</a></div>
+                <div class="quiz"><a href="{% url 'quiz' %}">Quiz</a></div>
+                <div class="contact"><a href="{% url 'send_email' %}">Contact Us</a></div>
+                <div class="logout"><a href="../logout">Logout</a></div>
+                <div class="profile"><a href="">Profile</a></div>
+
+                {% else %}
+                 <div><a href="../">Sign In</a></div>
+                <div><a href="../register">Sign Up</a></div>
+                <div><a href="{% url 'send_email' %}">Contact Us</a></div>
+
+                {% endif %}
+            </div>
+        </div>
+        <div class="form">
+            <h2 style="text-align:center">Register Here</h2>
+    <form action="../admission" method="post" enctype="multipart/form-data">
+        <table cellpadding="10" cellspacing="10">
+<tr>
+    <td><label for="name">Name</label></td>
+        <td> <input type="text" name="name" placeholder="name" class="name" required><br></td>
+       </tr>
+<tr>
+    <td><label for="date">Date</label></td>
+        <td><input type="date" class="date" placeholder="Date of Birth" min="1899" max="2025" required><br></td>
+</tr>
+    <tr>
+        <td> <label for="gender">gender</label></td>
+
+            <td>  <select name="gender" id="gender">
+            <option  selected disabled>--- Select Your Gender ---</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+        </select><br></td>
+    
+</tr>
+       
+<tr>    <td> <label for="photo">photo</label></td>
+        <td>  <input type="file" name="photo" id="photo" placeholder="select file" class="photo" required><br></td>
+ </tr>
+       
+      <tr>
+        <td><label for="email">email</label></td>
+        <td><input type="email" name="email" id="" class="email" placeholder="email" required><br></td>
+    </tr>
+     
+       <tr>
+        <td><label for="phone">phone</label></td>
+        <td><input type="tel" name="phone" id="" placeholder="phone number" class="phone"><br></td>
+    </tr>
+       
+        <tr>
+            <td><label for="adress">adress</label></td>
+            <td><textarea name="adress" id="" placeholder="adress" rows="3" cols="41" class="adress"></textarea><br></td>
+        </tr>
+  
+        <tr>
+            <td><label for="emargency">emergency contact</label></td> 
+            <td><input type="tel" name="emergency_contact" placeholder="emergency contact" id="" class="emergency"><br></td>
+        
+        </tr>
+        
+        <tr>
+            <td> <label for="aadhar">identity proof</label></td>
+             <td> <input type="number" name="aadhar" id=""placeholder="aadhar" class="aadhar"><br></td>
+            </tr>
+        
+       <tr>
+        <td> <label for="identity_proof">adhaar photo</label></td>
+         <td>  <input type="file" name="identity_proof" id="" class="identity_proof" placeholder="identity proof"><br></td>
+    </tr>
+       
+       <tr>
+        <td> <label for="vehicle">select vehicle</label></td>
+         <td>   <select name="vehicle" class="vehicle">
+        <option selected desabled>--- Select Vehicle ---</option>
+        <option value="Car">Car</option>
+        <option value="Bike">Bike</option>
+       </select><br></td>
+        </tr>
+     
+      
+    <tr>
+        <td><label for="batch">Schedule</label></td>
+
+    <td> <select name="batch" id="schedule">
+        <option selected disabled>--- Select Batch</option>
+        <option value="morning">Morning</option>
+        <option value="evening">Evening</option>
+       </select><br>  </td>
+    </tr>
+       
+      <tr ><td colspan="2" style="text-align:center"> <input type="button" value="submit" class="btn"></td></tr>
+    
+</table>
+    </form>
+</div>
+    </div>
+</body>
+</html>

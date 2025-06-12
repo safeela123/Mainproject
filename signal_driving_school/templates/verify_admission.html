@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Verify Your Admission Number</h2>
+<form method="post">
+    {% csrf_token %}
+    <input type="text" name="admission_number" placeholder="Enter Admission Number" required>
+    <button type="submit">Verify</button>
+</form>
+
+{% for message in messages %}
+    <p>{{ message }}</p>
+{% endfor %}
+</body>
+</html>

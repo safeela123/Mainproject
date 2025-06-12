@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Driving School Quiz</title>
+</head>
+<body>
+    <div class="main">
+        <div class="nav">
+            <div class="signal"> <h2>signal</h2> </div>
+            <div class="sub">
+                {% if user.is_authenticated %}
+                <div class="admission"><a href="../admission">Admission</a></div>
+                <div class="section"><a href="">Section</a></div>
+                <div class="quiz"><a href="{% url 'quiz' %}">Quiz</a></div>
+                <div class="contact"><a href="{% url 'send_email' %}">Contact Us</a></div>
+                <div class="logout"><a href="../logout">Logout</a></div>
+                <div class="profile"><a href="">Profile</a></div>
+
+                {% else %}
+                 <div><a href="../">Sign In</a></div>
+                <div><a href="../register">Sign Up</a></div>
+                <div><a href="{% url 'send_email' %}">Contact Us</a></div>
+
+                {% endif %}
+            </div>
+        </div>
+    <h1>Driving School Quiz</h1>
+    <form method="post" action="{% url 'quiz_result' %}">
+        {% csrf_token %}
+        {% for question in questions %}
+            <div>
+                <p><strong>{{ forloop.counter }}. {{ question.text }}</strong></p>
+                {% for choice in question.choices.all %}
+                    <label>
+                        <input type="radio" name="question_{{ question.id }}" value="{{ choice.id }}">
+                        {{ choice.text }}
+                    </label><br>
+                {% endfor %}
+            </div>
+            <hr>
+        {% endfor %}
+        <button type="submit">Submit</button>
+    </form>
+    </div>
+
+    <footer style="background:#222; color:#eee; padding:40px 20px; text-align:center; font-family: Arial, sans-serif;">
+  <div style="max-width:1000px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:space-between; gap:20px;">
+    
+    <div style="flex:1; min-width:200px; text-align:left;">
+      <h3 style="color:#f39c12; margin-bottom:15px;">Driving School</h3>
+      <p>Learn safe driving with expert instructors.<br>Enroll now and get your license faster!</p>
+      <p><strong>Address:</strong> ,Ernakulam,Kerala</p>
+      <p><strong>Phone:</strong> +91 98765 43210</p>
+      <p><strong>Email:</strong> signaldrivingschool@gmail.com</p>
+    </div>
+    
+    <div style="flex:1; min-width:150px; text-align:left;">
+      <h4 style="color:#f39c12; margin-bottom:15px;">Quick Links</h4>
+      <ul style="list-style:none; padding:0; line-height:1.8;">
+        <li><a href="/" style="color:#eee; text-decoration:none;">Home</a></li>
+        <li><a href="/courses" style="color:#eee; text-decoration:none;">Courses</a></li>
+        <li><a href="/..admission" style="color:#eee; text-decoration:none;">Admission</a></li>
+        <li><a href="{% url 'send_email' %}" style="color:#eee; text-decoration:none;">Contact Us</a></li>
+      </ul>
+    </div>
+    
+    <div style="flex:1; min-width:150px; text-align:left;">
+      <h4 style="color:#f39c12; margin-bottom:15px;">Follow Us</h4>
+      <a href="https://facebook.com" target="_blank" style="color:#eee; margin-right:10px; text-decoration:none; font-size:20px;display:flex;align-items:center"><img src="https://img.icons8.com/?size=100&id=13912&format=png&color=000000" alt="" height="40px" width="40px"> Facebook</a><br>
+      <a href="https://twitter.com" target="_blank" style="color:#eee; margin-right:10px; text-decoration:none; font-size:20px;display:flex;align-items:center"><img src="https://img.icons8.com/?size=100&id=cMRBi0rI3iwb&format=png&color=000000" alt="" height="40px" width="40px"> Twitter</a><br>
+      <a href="https://instagram.com" target="_blank" style="color:#eee; text-decoration:none; font-size:20px;display:flex;align-items:center"><img src="https://img.icons8.com/?size=100&id=32323&format=png&color=000000" alt="" height="40px" width="40px"> Instagram</a>
+    </div>
+    
+  </div>
+
+  <hr style="border-color:#444; margin:30px 0;">
+
+  <p style="font-size:14px; color:#999;">&copy; 2025 Driving School. All rights reserved.</p>
+</footer>
+</body>
+</html>
