@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="{% static 'css/admission.css' %}">
+    <link rel="stylesheet" href="{% static 'css/adupdate.css' %}">
 </head>
 <body>
      {%if request.user.is_authenticated %}
@@ -13,7 +13,7 @@
         <div class="nav">
             <div class="signal"> <h2>signal</h2> </div>
             <div class="sub">
-                {% if user.is_authenticated %}
+              
                 <div class="admission"><a href="../admission">Admission</a></div>
                 <div class="section"><a href="">Section</a></div>
                 <div class="quiz"><a href="{% url 'quiz' %}">Quiz</a></div>
@@ -27,25 +27,26 @@
                 <div><a href="{% url 'send_email' %}">Contact Us</a></div>
 
                 {% endif %}
+             {% if user.is_authenticated %}
             </div>
         </div>
         <div class="form">
-            <h2 style="text-align:center">Register Here</h2>
-    <form action="../admission" method="post" enctype="multipart/form-data">
+            <h2 style="text-align:center">Update Here</h2>
+    <form action="../update/{{data.id}}" method="post" enctype="multipart/form-data">
 {% csrf_token %}
 <table cellpadding="2" cellspacing="40">
 <tr>
     <td><label for="name">Name:</label></td>
-        <td> <input type="text" name="name" placeholder="name" class="name" required><br></td>
+        <td> <input type="text" name="name" placeholder="name" class="name" value="{{data.name}}" required><br></td>
        <!-- </tr> -->
 <!-- <tr> -->
     <td><label for="date">Date of Birth:</label></td>
-        <td><input type="date" class="date" placeholder="Date of Birth" min="1899" max="2025" name="date_of_birth" required><br></td>
+        <td><input type="date" class="date" placeholder="Date of Birth" min="1899" max="2025" name="date_of_birth" value="{{data.date_of_birth|date:'Y-m-d'}}" required><br></td>
 </tr>
     <tr>
         <td> <label for="gender">gender:</label></td>
 
-            <td>  <select name="gender" id="gender">
+            <td>  <select name="gender" id="gender" >
             <option  selected disabled>--- Select Your Gender ---</option>
             <option value="male">Male</option>
             <option value="female">Female</option>
@@ -55,54 +56,57 @@
 <!-- </tr> -->
       <!-- <tr> -->
         <td><label for="email">email:</label></td>
-        <td><input type="email" name="email" id="" class="email" placeholder="email" required><br></td>
+        <td><input type="email" name="email" id="" class="email" placeholder="email" value="{{data.email}}" required><br></td>
     </tr>
      
        <tr>
         <td><label for="phone">phone:</label></td>
-        <td><input type="tel" name="phone" id="" placeholder="phone number" class="phone"><br></td>
+        <td><input type="tel" name="phone" id="" placeholder="phone number" class="phone" value="{{data.phone}}"><br></td>
     <!-- </tr> -->
        
         <!-- <tr> -->
             <td><label for="address">address:</label></td>
-            <td><textarea name="address" id="" placeholder="adress" rows="3" cols="41" class="adress"></textarea><br></td>
+            <td><textarea name="address" id="" placeholder="adress" rows="3" cols="41" class="adress" >{{data.address}}</textarea><br></td>
         </tr>
   
         <tr>
             <td><label for="emergency">emergency contact:</label></td> 
-            <td><input type="tel" name="emergency_contact" placeholder="emergency contact" id="" class="emergency"><br></td>
+            <td><input type="tel" name="emergency_contact" placeholder="emergency contact" id="" class="emergency" value="{{data.emergency_contact}}"><br></td>
         
         <!-- </tr> -->
         
         <!-- <tr> -->
             <td> <label for="aadhar">Adhar number:</label></td>
-             <td> <input type="number" name="aadhar_number" id=""placeholder="aadhar" class="aadhar"><br></td>
+             <td> <input type="number" name="aadhar_number" id=""placeholder="aadhar" class="aadhar" value="{{data.aadhar_number}}"><br></td>
             </tr>
         
        <tr>
         <td> <label for="identity_proof">adhaar photo:</label></td>
-         <td>  <input type="file" name="identity_proof_upload" id="" class="identity_proof" placeholder="identity proof"><br></td>
+         <td>  <input type="file" name="identity_proof_upload" id="" class="identity_proof" placeholder="identity proof" value="{{data.identity_proof_upload}}"><br></td>
     <!-- </tr> -->
 
        <!-- <tr>  -->
        <td> <label for="photo">photo:</label></td>
-        <td>  <input type="file" name="photo" id="photo" placeholder="select file" class="photo" required><br></td>
+        <td>  <input type="file" name="photo" id="photo" placeholder="select file" class="photo"  value="{{data.photo}}" required><br></td>
  </tr>
 <tr>
   <td><label for="vehicle">Select vehicle:</label></td>
   <td>
-    <select name="vehicle_type" id="vehicle" class="vehicle" onchange="updateAmount()" required>
-      <option value="" selected disabled>--- Select Vehicle ---</option>
-      <option value="car">Car</option>
-      <option value="bike">Bike</option>
-      <option value="both">Both</option>
-    </select>
+    <select disabled>
+  <option value="car" {% if selected == 'car' %}selected{% endif %}>Car</option>
+  <option value="bike" {% if selected == 'bike' %}selected{% endif %}>Bike</option>
+  <option value="both" {% if selected == 'both' %}selected{% endif %}>Both</option>
+</select>
+
+<!-- Hidden field to actually submit -->
+<input type="hidden" name="vehicle_type" value="{{ selected }}">
   </td>
+
 
         <!-- </tr> -->
      <!-- <tr> -->
         <td><label for="amount">Amount (INR):</label></td>
-        <td><input type="text" name="amount" id="amount" placeholder="Amount" readonly></td>
+        <td><input type="text" name="amount" id="amount" placeholder="Amount" value="{{data1.amount}}"readonly></td>
     </tr>
         
   
@@ -119,6 +123,8 @@
       <tr ><td colspan="4" style="text-align :center;"> <input type="submit" value="submit" class="btn"></td></tr>
     
 </table>
+
+
     </form>
 </div>
     </div>

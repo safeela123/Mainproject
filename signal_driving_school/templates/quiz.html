@@ -1,49 +1,210 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Driving School Quiz</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Driving School Quiz</title>
+  <link rel="stylesheet" href="">
+ <style>
+        * {
+            box-sizing: border-box;
+
+}
+.main{
+    min-height:100vh;
+    width:100%;
+
+}
+.nav{
+    width:100%;
+    height:50px;
+    background-color:red;
+    display:flex;
+    justify-content:space-between;
+    align-items: center;
+    
+}
+.nav a{
+    text-decoration:none;
+    color:black;
+}
+
+.signal{
+    flex:1;
+}
+.sub{
+    flex:1;
+   width:100%;
+    display:flex;
+    justify-content:space-between;
+    
+}
+
+/* For tablets and below */
+@media screen and (max-width: 768px) {
+    .nav {
+        flex-direction: column;
+        height: auto;
+        padding: 10px;
+    }
+
+    .sub {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+}
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .quiz-container {
+            background: #ffffff;
+            padding: 20px 30px;
+            border-radius: 10px;
+            max-width: 600px;
+            margin-top:50px;
+            margin-bottom:50px;
+            margin-left:auto;
+            margin-right:auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: #333;
+            margin-top: 0;
+        }
+
+        p {
+            font-size: 18px;
+            color: #222;
+        }
+
+        .choice {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        .btn {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 18px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        .page-info {
+            margin-top: 20px;
+            color: #555;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        /* ✅ Responsive Styles */
+        @media (max-width: 768px) {
+            .quiz-container {
+                padding: 15px 20px;
+                margin: 15px;
+            }
+
+            .btn {
+                width: 100%;
+                font-size: 16px;
+            }
+
+            .choice {
+                font-size: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .quiz-container {
+                padding: 15px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            p {
+                font-size: 16px;
+            }
+
+            .choice {
+                font-size: 14px;
+            }
+
+            .page-info {
+                font-size: 13px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="main">
-        <div class="nav">
-            <div class="signal"> <h2>signal</h2> </div>
-            <div class="sub">
-                {% if user.is_authenticated %}
-                <div class="admission"><a href="../admission">Admission</a></div>
-                <div class="section"><a href="">Section</a></div>
-                <div class="quiz"><a href="{% url 'quiz' %}">Quiz</a></div>
-                <div class="contact"><a href="{% url 'send_email' %}">Contact Us</a></div>
-                <div class="logout"><a href="../logout">Logout</a></div>
-                <div class="profile"><a href="">Profile</a></div>
 
-                {% else %}
-                 <div><a href="../">Sign In</a></div>
-                <div><a href="../register">Sign Up</a></div>
-                <div><a href="{% url 'send_email' %}">Contact Us</a></div>
-
-                {% endif %}
-            </div>
-        </div>
-    <h1>Driving School Quiz</h1>
-    <form method="post" action="{% url 'quiz_result' %}">
-        {% csrf_token %}
-        {% for question in questions %}
-            <div>
-                <p><strong>{{ forloop.counter }}. {{ question.text }}</strong></p>
-                {% for choice in question.choices.all %}
-                    <label>
-                        <input type="radio" name="question_{{ question.id }}" value="{{ choice.id }}">
-                        {{ choice.text }}
-                    </label><br>
-                {% endfor %}
-            </div>
-            <hr>
-        {% endfor %}
-        <button type="submit">Submit</button>
-    </form>
+  <div class="main">
+    <div class="nav">
+      <div class="signal"><h2>Signal</h2></div>
+      <div class="sub">
+        {% if user.is_authenticated %}
+          <div><a href="../admission">Admission</a></div>
+          <div><a href="">Section</a></div>
+          <div><a href="{% url 'quiz' %}">Quiz</a></div>
+          <div><a href="{% url 'send_email' %}">Contact Us</a></div>
+          <div><a href="{% url 'review_page' %}">Review</a></div>
+          <div><a href="../logout">Logout</a></div>
+          <!-- <div><a href="#">Profile</a></div> -->
+        {% else %}
+          <div><a href="../">Sign In</a></div>
+          <div><a href="../register">Sign Up</a></div>
+          <div><a href="{% url 'send_email' %}">Contact Us</a></div>
+        {% endif %}
+      </div>
     </div>
 
-    <footer style="background:#222; color:#eee; padding:40px 20px; text-align:center; font-family: Arial, sans-serif;">
+    <div class="quiz-container">
+        <h2>Question {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</h2>
+
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="question_id" value="{{ page_obj.object_list.0.id }}">
+
+            <p><strong>{{ page_obj.object_list.0.text }}</strong></p>
+
+            {% for choice in page_obj.object_list.0.random_choices %}
+                <div class="choice">
+                    <label>
+                        <input type="radio" name="answer" value="{{ choice.id }}" required>
+                        {{ choice.text }}
+                    </label>
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn">
+                {% if page_obj.has_next %}
+                    Next
+                {% else %}
+                    Submit
+                {% endif %}
+            </button>
+        </form>
+
+        <div class="page-info">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </div>
+    </div>
+
+ <footer style="background:#222; color:#eee; padding:40px 20px; text-align:center; font-family: Arial, sans-serif;">
   <div style="max-width:1000px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:space-between; gap:20px;">
     
     <div style="flex:1; min-width:200px; text-align:left;">
@@ -77,5 +238,9 @@
 
   <p style="font-size:14px; color:#999;">&copy; 2025 Driving School. All rights reserved.</p>
 </footer>
+
+    </div>
+
 </body>
 </html>
+    <!-- <form method="post" action="{% url 'quiz_result' %}"></form> -->

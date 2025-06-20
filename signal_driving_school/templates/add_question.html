@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/add_question.css'%}">
+</head>
+<body>
+    <div class="main">
+        <div class="nav">
+            <div class="signal"> <h2>signal</h2> </div>
+            <div class="sub">
+                {% if user.is_authenticated %}
+                <div class="adindex"><a href="../adindex">Home</a></div>
+                <div class="quizlist"><a href="{% url 'question_list'%}">Question List</a></div>
+                <div class="quizadd"><a href="{% url 'add_question'%}">Add Question</a></div>
+                <!-- <div class=""><a href=""></a></div>
+                <div class=""><a href=""></a></div> -->
+                <div class="logout"><a href="../logout">Logout</a></div>
+                <div class=""><a href=""></a></div>
+
+                {% else %}
+                 <div><a href="../">Sign In</a></div>
+                <div><a href="../register">Sign Up</a></div>
+                <div><a href="">Contact Us</a></div>
+
+                {% endif %}
+            </div>
+        </div>
+
+<form method="post">
+    {% csrf_token %}
+  
+    <textarea name="question" rows="4" cols="40"  id="" class="qstn">Question Add Here</textarea><br><br>
+
+    {% for i in "1234"|make_list %}
+        <label>Choice {{ i }}:</label>
+        <input type="text" name="choice{{ i }}" class="choice">
+        <input type="radio" name="correct" value="choice{{ i }}"> Correct<br><br>
+    {% endfor %}
+
+    <button type="submit" class="btn">Save</button> 
+
+</form>
+
+    
+</div>
+</body>
+</html>

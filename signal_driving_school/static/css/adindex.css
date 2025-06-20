@@ -1,0 +1,127 @@
+body {
+  margin: 0;
+}
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.main {
+  width: 100%;
+}
+
+.nav {
+    background-color:red;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items:center;
+}
+
+.table {
+  width: 100%;
+  overflow-x: auto;
+  display: block;
+  white-space: nowrap;
+}
+.nav a {
+  text-decoration: none;
+  color: black;
+  margin: 0 10px;
+}
+
+.signal {
+  font-weight: bold;
+  color: white;
+}
+
+.sub {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+
+
+.edit,
+.delete {
+  border: 1px solid black;
+  padding: 5px 10px;
+  text-decoration: none;
+  color: black;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.edit {
+  background-color: rgb(132, 238, 132);
+}
+
+.delete {
+  background-color: rgb(255, 185, 54);
+}
+
+/* Medium and smaller tablets */
+@media screen and (max-width: 768px)and(min-width:481px) {
+  .nav {
+    width:100%;
+    justify-content:space-between;
+    align-items: center;
+  }
+
+  .sub {
+    flex-direction: column;
+    width: 100%;
+    padding-top: 10px;
+  }
+
+  .nav a {
+    font-size: 16px;
+    margin: 5px 0;
+  }
+
+  .table {
+    width: 100%;
+    margin-left: 0;
+    font-size: 14px;
+  }
+}
+
+/* Small mobile screens */
+@media screen and (max-width: 480px) {
+  .nav {
+    padding: 10px;
+  }
+
+  .nav a {
+    font-size: 14px;
+  }
+
+  .sub {
+    gap: 8px;
+  }
+
+  .table {
+    font-size: 12px;
+    overflow-x: auto;
+  }
+
+  .edit,
+  .delete {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+}
+
+/* Large screens */
+@media screen and (min-width: 1025px) {
+  .table {
+    font-size: 16px;
+  }
+
+  .nav a {
+    font-size: 18px;
+  }
+}

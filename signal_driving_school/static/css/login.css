@@ -1,10 +1,9 @@
-* {
+/* * {
     margin: 0px;
     padding:0px;
     box-sizing: border-box;
 }
 
-/* Main container styling */
 .main {
     display:flex;
     justify-content:space-evenly;
@@ -30,7 +29,6 @@
     background-color:rgb(55, 167, 241);
     padding: 20px;
     color: white;
-    /* width: 50%; */
     width: 30%; 
     height: 100vh;
     text-align: center;
@@ -87,48 +85,107 @@ form{
 .sub p a:hover {
     color: rgb(95, 212, 42);
     
+} */
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-
-@media screen and (max-width: 768px) {
-    .sub {
-        width: 85%; 
-        padding: 15px;
-    }
-
-    .sub .input {
-        width: 90%;
-        
-        height: 45px;
-    }
-
-    .button {
-        height: 45px; 
-    }
-
-    .sub h1 {
-        font-size: 24px;
-    }
+body, html {
+    height: 100%;
+    width: 100%;
+    font-family: Arial, sans-serif;
 }
 
+.main {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    padding: 20px;
+}
 
-@media screen and (max-width: 480px) {
-    .sub {
-        width: 90%;
-        padding: 10px; 
-    }
+/* Part sections */
+.part1, .part2 {
+    padding: 20px;
+}
 
-    .sub .input {
-        width: 100%; 
-        height: 50px; 
-    }
+.part1 {
+    flex: 1.7;
+    min-width: 300px;
+}
 
-    .button {
-        height: 50px;
-        font-size: 18px; 
-    }
+.part2 {
+    flex: 1;
+    min-width: 300px;
+}
 
-    .sub h1 {
-        font-size: 22px; 
-    }
+/* Form container */
+.sub {
+    background-color: rgb(55, 167, 241);
+    padding: 30px;
+    color: white;
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+    border-radius: 20px;
+    border: 3px solid white;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    margin: 0 auto;
+    height:80vh;
+}
+
+form {
+    margin-top: 30px;
+}
+
+.sub .input {
+    width: 90%;
+    height: 45px;
+    padding: 10px;
+    margin: 10px auto;
+    border-radius: 20px;
+    border: none;
+    font-size: 16px;
+}
+
+.button {
+    width: 90%;
+    height: 45px;
+    background-color: black;
+    color: white;
+    border-radius: 20px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: rgb(95, 212, 42);
+}
+
+.sub p {
+    margin-top: 30px;
+}
+
+.sub p a {
+    text-decoration: none;
+    color: rgb(114, 255, 49);
+}
+
+.sub p a:hover {
+    color: rgb(95, 212, 42);
+}
+.forgot{
+    margin-top:20px;
 }

@@ -17,6 +17,121 @@
 .btn{
     background-color: blueviolet;
     color:black;
-    width:200px;
+    width:410px;
     height:30px;
+}
+h2{
+    margin-bottom:20px;
+}
+.name{
+    width:400px;
+}
+.email{
+    width:400px;
+}
+.subject{
+    width:400px;
+}
+.message{
+    width:400px;
+}
+
+/* Smartphones */
+@media (max-width: 600px) {
+    .sub {
+        width: 90%;
+        top: 10%;
+        left: 5%;
+        transform: none;
+    }
+
+    .name,
+    .email,
+    .subject,
+    .message,
+    .btn {
+        width: 100% !important;
+        max-width: 100%;
+    }
+}
+
+/* Tablets */
+@media (min-width: 601px) and (max-width: 1024px) {
+    .sub {
+        width: 80%;
+        left: 10%;
+        top: 15%;
+    }
+
+    .name,
+    .email,
+    .subject,
+    .message,
+    .btn {
+        width: 100% !important;
+    }
+}
+
+/* Laptops / Medium Screens */
+@media (min-width: 1025px) and (max-width: 1440px) {
+    .sub {
+        width: 65%;
+        left: 17.5%;
+    }
+}
+
+/* Large Screens */
+@media (min-width: 1441px) {
+    .sub {
+        width: 50%;
+        left: 25%;
+    }
+}
+
+body{
+margin:0px;
+}
+.main{
+    min-height:100vh;
+    width:100%;
+
+}
+.nav{
+    width:100%;
+    height:50px;
+    background-color:red;
+    display:flex;
+    justify-content:space-between;
+    align-items: center;
+    
+}
+.nav a{
+    text-decoration:none;
+    color:black;
+}
+
+.signal{
+    flex:1;
+}
+.sub1{
+    flex:1;
+   width:100%;
+    display:flex;
+    justify-content:space-between;
+    
+}
+
+/* For tablets and below */
+@media screen and (max-width: 768px) {
+    .nav {
+        flex-direction: column;
+        height: auto;
+        padding: 10px;
+    }
+
+    .sub1 {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
 }

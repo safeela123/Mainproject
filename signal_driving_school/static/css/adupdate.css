@@ -7,14 +7,13 @@ margin:0px;
 
 }
 .nav{
-
+    width:100%;
+    height:50px;
     background-color:red;
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items:center;
-
+    display:flex;
+    justify-content:space-between;
+    align-items: center;
+    
 }
 .nav a{
     text-decoration:none;
@@ -108,7 +107,7 @@ table{
     color:white;
 }
 
-/* For small screens (phones) */
+/* 📱 Phones */
 @media (max-width: 600px) {
     .nav {
         flex-direction: column;
@@ -120,8 +119,9 @@ table{
     .sub {
         flex-direction: column;
         align-items: flex-start;
-        gap: 10px;
         width: 100%;
+        gap: 10px;
+        padding: 10px 0;
     }
 
     .form {
@@ -136,35 +136,34 @@ table{
     td {
         display: block;
         width: 100%;
+        padding-bottom: 10px;
     }
 
     input,
     select,
     textarea {
         width: 100% !important;
+        box-sizing: border-box;
     }
 
     .btn {
-        width: 100%;
+        width: 100% !important;
     }
 }
 
-/* For medium screens (tablets) */
-@media (min-width: 601px) and (max-width: 1100px) {
+/* 💻 Tablets */
+@media (min-width: 601px) and (max-width: 1024px) {
     .nav {
-        flex-direction: row;
         flex-wrap: wrap;
-        height: auto;
         padding: 10px;
-        width:100%;
-       
-        justify-content: space-around;
+        height: auto;
     }
 
     .sub {
         flex-wrap: wrap;
-        gap: 10px;
         justify-content: flex-start;
+        gap: 15px;
+        width: 100%;
     }
 
     .form {
@@ -177,7 +176,7 @@ table{
     }
 
     td {
-        padding: 10px 0;
+        padding: 8px 0;
     }
 
     input,
@@ -187,6 +186,44 @@ table{
     }
 
     .btn {
-        width: 60%;
+        width: 60% !important;
+    }
+}
+
+/* 🖥️ Medium Screens (Laptops, 1025px–1440px) */
+@media (min-width: 1025px) and (max-width: 1440px) {
+    .form {
+        margin: 40px auto;
+        max-width: 90%;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    input,
+    select,
+    textarea {
+        width: 100% !important;
+    }
+
+    .btn {
+        width: 50% !important;
+    }
+}
+
+/* 🖥️💼 Large Screens (1441px and above) */
+@media (min-width: 1441px) {
+    .form {
+        max-width: 1000px;
+        margin: 50px auto;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    .btn {
+        width: 40% !important;
     }
 }

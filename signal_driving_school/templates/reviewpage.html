@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Review Page</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f7f7f7;
+    }
+
+    .main {
+      max-width: 1000px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      background-color:red;
+    }
+
+    .signal h2 {
+      font-size: 24px;
+      color: #333;
+    }
+
+    .sub {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .sub div a {
+      text-decoration: none;
+      color: black;
+      font-weight: bold;
+      padding: 6px 12px;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+
+    .sub div a:hover {
+      background-color: #e6f0ff;
+    }
+
+    h2 {
+      color: #444;
+      margin-bottom: 15px;
+    }
+
+    form {
+      margin-bottom: 40px;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      resize: vertical;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      background-color: #28a745;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    .star-rating {
+      direction: rtl;
+      font-size: 1.8rem;
+      unicode-bidi: bidi-override;
+      display: inline-block;
+      margin: 10px 0;
+    }
+
+    .star-rating input {
+      display: none;
+    }
+
+    .star-rating label {
+      color: #ccc;
+      cursor: pointer;
+    }
+
+    .star-rating input:checked ~ label,
+    .star-rating label:hover,
+    .star-rating label:hover ~ label {
+      color: gold;
+    }
+
+    .review-box {
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: #f5f5f5;
+      border-radius: 5px;
+    }
+
+    .review-box .stars {
+      color: gold;
+      font-size: 1.2rem;
+      margin-bottom: 5px;
+    }
+
+    .review-box p {
+      margin-bottom: 5px;
+    }
+
+    .review-box small {
+      color: #888;
+    }
+
+   
+    @media (max-width: 768px) {
+      .nav {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .sub {
+        justify-content: flex-start;
+      }
+
+      .signal h2 {
+        font-size: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .main {
+        padding: 20px;
+      }
+
+      .sub div a {
+        font-size: 14px;
+        padding: 4px 8px;
+      }
+
+      .star-rating {
+        font-size: 1.5rem;
+      }
+
+      textarea {
+        font-size: 0.95rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="main">
+  <div class="nav">
+    <div class="signal"><h2>Signal</h2></div>
+    <div class="sub">
+      {% if user.is_authenticated %}
+        <div><a href="../admission">Admission</a></div>
+        <div><a href="#">Section</a></div>
+        <div><a href="{% url 'quiz' %}">Quiz</a></div>
+        <div><a href="{% url 'send_email' %}">Contact Us</a></div>
+        <div><a href="{% url 'review_page' %}">Review</a></div>
+        <div><a href="../logout">Logout</a></div>
+        <!-- <div><a href="#">Profile</a></div> -->
+      {% else %}
+        <div><a href="../">Sign In</a></div>
+        <div><a href="../register">Sign Up</a></div>
+        <div><a href="{% url 'send_email' %}">Contact Us</a></div>
+      {% endif %}
+    </div>
+  </div>
+
+  <h2>Leave a Review</h2>
+  <form method="post">
+    {% csrf_token %}
+    <label for="rating">Rating:</label><br>
+    <div class="star-rating">
+      {% for i in "54321" %}
+        <input type="radio" id="star{{ i }}" name="rating" value="{{ i }}">
+        <label for="star{{ i }}">★</label>
+      {% endfor %}
+    </div>
+
+    <br>
+    <label for="review_text">Your Review:</label><br>
+    <textarea name="review_text" rows="4" required></textarea><br>
+    <button type="submit">Submit</button>
+  </form>
+
+  <hr>
+
+  <h2>Student Reviews</h2>
+  {% for review in reviews %}
+    <div class="review-box">
+      <div class="stars">
+        {% for i in "12345" %}
+          {% if forloop.counter <= review.rating %}
+            ★
+          {% else %}
+            ☆
+          {% endif %}
+        {% endfor %}
+      </div>
+      <p>{{review.user}}</p>
+      <p>{{ review.review_text }}</p>
+      <small>{{ review.created_at|date:"F j, Y" }}</small>
+    </div>
+  {% empty %}
+    <p>No reviews yet. Be the first!</p>
+  {% endfor %}
+</div>
+
+</body>
+</html>

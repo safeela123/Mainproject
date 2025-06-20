@@ -131,5 +131,14 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'safeelansrin42484@gmail.com'
-EMAIL_HOST_PASSWORD = 'your_app_password'
+EMAIL_HOST_PASSWORD = 'lziotyxgtpmtxixu'
+
+# From and To
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+CONTACT_RECEIVER_EMAIL = 'safeelansrin42484@gmail.com'  # ✅ Where you want to receive contact messages
+
+PASSWORD_RESET_TIMEOUT = 3600 #in seconds
+
+RAZORPAY_KEY_ID='rzp_test_CiQONIOXkNXeKL'
+RAZORPAY_KEY_SECRET='I0UC6k7BR1PjG1ICZtXkxrvT'
 

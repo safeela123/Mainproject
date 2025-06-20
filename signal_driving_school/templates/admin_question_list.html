@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <title>Manage Quiz Questions</title>
+    <link rel="stylesheet" href="{% static 'css/question_list.css'%}">
+</head>
+<body>
+       <div class="main">
+        <div class="nav">
+            <div class="signal"> <h2>signal</h2> </div>
+            <div class="sub">
+                {% if user.is_authenticated %}
+                <div class="adindex"><a href="../adindex">Home</a></div>
+                <div class="quizlist"><a href="{% url 'question_list'%}">Question List</a></div>
+                <div class="quizadd"><a href="{% url 'add_question'%}">Add Question</a></div>
+                <!-- <div class=""><a href=""></a></div>
+                <div class=""><a href=""></a></div> -->
+                <div class="logout"><a href="../logout">Logout</a></div>
+                <div class=""><a href=""></a></div>
+
+                {% else %}
+                 <div><a href="../">Sign In</a></div>
+                <div><a href="../register">Sign Up</a></div>
+                <div><a href="">Contact Us</a></div>
+
+                {% endif %}
+            </div>
+        </div>
+    <h2>Quiz Questions</h2>
+
+   
+
+    {% for question in questions %}
+        <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;margin-top:50px;height:200px;display:flex;flex-direction:column;justify-content:center;margin-left:30px;margin-right:40px;">
+            <strong>Q{{ forloop.counter }}. {{ question.text }}</strong><br>
+            <ul>
+                {% for choice in question.choices.all %}
+                    <li>
+                        {{ choice.text }}
+                        {% if choice.is_correct %}<strong>(Correct)</strong>{% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+            <div class="btn">
+            <a href="{% url 'edit_question' question.id %}" class="edit">Edit</a> 
+            <a href="{% url 'delete_question' question.id %}" class="delete">Delete</a>
+        </div>
+        </div>
+    {% empty %}
+        <p>No questions added yet.</p>
+    {% endfor %}
+
+<br><br>
+     <a href="{% url 'add_question' %}" style="border:1px solid black;padding:8px;background-color:rgb(68, 233, 68);text-decoration:none;margin-left:20px;color:black">+ Add New Question</a>
+
+    </div>
+    
+</body>
+</html>

@@ -1,67 +1,227 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Quiz Result</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quiz Result</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .trophy {
+      width: 100px;
+      display: block;
+      margin: 0 auto 20px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    ol {
+      padding-left: 20px;
+    }
+
+    ol li {
+      margin-bottom: 20px;
+      background: #f9f9f9;
+      padding: 15px;
+      border-left: 5px solid #ddd;
+      border-radius: 5px;
+    }
+
+    .correct {
+      color: green;
+      font-weight: bold;
+    }
+
+    .incorrect {
+      color: red;
+      font-weight: bold;
+    }
+
+    .try-again {
+      display: block;
+      text-align: center;
+      margin-top: 30px;
+      font-weight: bold;
+      text-decoration: none;
+      color: #007bff;
+    }
+
+    footer {
+      background: #222;
+      color: #eee;
+      padding: 40px 20px;
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    .footer-container {
+      max-width: 1000px;
+      margin: auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .footer-section {
+      flex: 1;
+      min-width: 200px;
+      text-align: left;
+    }
+
+    .footer-section h3,
+    .footer-section h4 {
+      color: #f39c12;
+      margin-bottom: 15px;
+    }
+
+    .footer-section ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .footer-section ul li {
+      margin-bottom: 10px;
+    }
+
+    .footer-section a {
+      color: #eee;
+      text-decoration: none;
+    }
+
+    .footer-section a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-section img {
+      margin-right: 10px;
+    }
+
+    hr {
+      border-color: #444;
+      margin: 30px 0;
+    }
+
+    .footer-bottom {
+      font-size: 14px;
+      color: #999;
+    }
+
+    /* 🔁 Responsive adjustments */
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+      }
+      .footer-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .footer-section {
+        min-width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
+      .trophy {
+        width: 70px;
+      }
+      h2 {
+        font-size: 1.3em;
+      }
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
     <h2>Your Score: {{ score }} / {{ total }}</h2>
 
     <ol>
-        {% for result in results %}
-            <li>
-                <p><strong>{{ result.question.text }}</strong></p>
-                <p>Your answer: 
-                    {% if result.selected %}
-                        {{ result.selected.text }}
-                    {% else %}
-                        <em>Not answered</em>
-                    {% endif %}
-                </p>
-                <p>Correct answer: {{ result.correct.text }}</p>
-                {% if result.selected and result.selected.id == result.correct.id %}
-                    <p style="color: green;"><strong>Correct</strong></p>
-                {% else %}
-                    <p style="color: red;"><strong>Incorrect</strong></p>
-                {% endif %}
-            </li>
-        {% endfor %}
+      {% for result in results %}
+        <li>
+          <p><strong>{{ result.question.text }}</strong></p>
+          <p>Your answer: 
+            {% if result.selected %}
+              {{ result.selected.text }}
+            {% else %}
+              <em>Not answered</em>
+            {% endif %}
+          </p>
+          <p>Correct answer: {{ result.correct.text }}</p>
+          {% if result.selected and result.selected.id == result.correct.id %}
+            <p class="correct">Correct</p>
+          {% else %}
+            <p class="incorrect">Incorrect</p>
+          {% endif %}
+        </li>
+      {% endfor %}
     </ol>
 
-    <a href="{% url 'quiz' %}">Try Again</a>
-
-    <footer style="background:#222; color:#eee; padding:40px 20px; text-align:center; font-family: Arial, sans-serif;">
-  <div style="max-width:1000px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:space-between; gap:20px;">
-    
-    <div style="flex:1; min-width:200px; text-align:left;">
-      <h3 style="color:#f39c12; margin-bottom:15px;">Driving School</h3>
-      <p>Learn safe driving with expert instructors.<br>Enroll now and get your license faster!</p>
-      <p><strong>Address:</strong> ,Ernakulam,Kerala</p>
-      <p><strong>Phone:</strong> +91 98765 43210</p>
-      <p><strong>Email:</strong> signaldrivingschool@gmail.com</p>
-    </div>
-    
-    <div style="flex:1; min-width:150px; text-align:left;">
-      <h4 style="color:#f39c12; margin-bottom:15px;">Quick Links</h4>
-      <ul style="list-style:none; padding:0; line-height:1.8;">
-        <li><a href="/" style="color:#eee; text-decoration:none;">Home</a></li>
-        <li><a href="/courses" style="color:#eee; text-decoration:none;">Courses</a></li>
-        <li><a href="/..admission" style="color:#eee; text-decoration:none;">Admission</a></li>
-        <li><a href="{% url 'send_email' %}" style="color:#eee; text-decoration:none;">Contact Us</a></li>
-      </ul>
-    </div>
-    
-    <div style="flex:1; min-width:150px; text-align:left;">
-      <h4 style="color:#f39c12; margin-bottom:15px;">Follow Us</h4>
-      <a href="https://facebook.com" target="_blank" style="color:#eee; margin-right:10px; text-decoration:none; font-size:20px;display:flex;align-items:center"><img src="https://img.icons8.com/?size=100&id=13912&format=png&color=000000" alt="" height="40px" width="40px"> Facebook</a><br>
-      <a href="https://twitter.com" target="_blank" style="color:#eee; margin-right:10px; text-decoration:none; font-size:20px;display:flex;align-items:center"><img src="https://img.icons8.com/?size=100&id=cMRBi0rI3iwb&format=png&color=000000" alt="" height="40px" width="40px"> Twitter</a><br>
-      <a href="https://instagram.com" target="_blank" style="color:#eee; text-decoration:none; font-size:20px;display:flex;align-items:center"><img src="https://img.icons8.com/?size=100&id=32323&format=png&color=000000" alt="" height="40px" width="40px"> Instagram</a>
-    </div>
-    
+    <a class="try-again" href="{% url 'quiz' %}">🔁 Try Again</a>
   </div>
 
-  <hr style="border-color:#444; margin:30px 0;">
+  <footer>
+    <div class="footer-container">
+      <div class="footer-section">
+        <h3>Driving School</h3>
+        <p>Learn safe driving with expert instructors.<br/>Enroll now and get your license faster!</p>
+        <p><strong>Address:</strong> Ernakulam, Kerala</p>
+        <p><strong>Phone:</strong> +91 98765 43210</p>
+        <p><strong>Email:</strong> signaldrivingschool@gmail.com</p>
+      </div>
 
-  <p style="font-size:14px; color:#999;">&copy; 2025 Driving School. All rights reserved.</p>
-</footer>
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/courses">Courses</a></li>
+          <li><a href="/admission">Admission</a></li>
+          <li><a href="{% url 'send_email' %}">Contact Us</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4>Follow Us</h4>
+        <a href="https://facebook.com" target="_blank">
+          <img src="https://img.icons8.com/?size=100&id=13912&format=png&color=ffffff" width="30" alt="Facebook"/> Facebook
+        </a><br/>
+        <a href="https://twitter.com" target="_blank">
+          <img src="https://img.icons8.com/?size=100&id=cMRBi0rI3iwb&format=png&color=ffffff" width="30" alt="Twitter"/> Twitter
+        </a><br/>
+        <a href="https://instagram.com" target="_blank">
+          <img src="https://img.icons8.com/?size=100&id=32323&format=png&color=ffffff" width="30" alt="Instagram"/> Instagram
+        </a>
+      </div>
+    </div>
+
+    <hr />
+    <p class="footer-bottom">&copy; 2025 Driving School. All rights reserved.</p>
+  </footer>
 </body>
 </html>
