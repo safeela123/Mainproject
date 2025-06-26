@@ -25,10 +25,11 @@ margin:0px;
     flex:1;
 }
 .sub{
-    flex:1;
+    flex:2;
    width:100%;
     display:flex;
     justify-content:space-between;
+    font-size:18px;
     
 }
 .form{
@@ -106,6 +107,59 @@ table{
     width:200px;
     background-color:black;
     color:white;
+}
+
+.message-container {
+    margin: 20px auto;
+    max-width: 600px;
+    padding: 10px;
+}
+
+/* Base style for all messages */
+.message {
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    border-left: 6px solid;
+    border-radius: 5px;
+    font-weight: 500;
+    position: relative;
+    background-color: #f9f9f9;
+}
+
+/* Close button */
+.message .close {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* Different message types */
+.message.info {
+    border-color: #2196F3;
+    background-color: #E3F2FD;
+    color: #0d47a1;
+}
+
+.message.success {
+    border-color: #4CAF50;
+    background-color: #E8F5E9;
+    color: #1b5e20;
+}
+
+.message.warning {
+    border-color: #FF9800;
+    background-color: #FFF3E0;
+    color: #e65100;
+}
+
+.message.error {
+    border-color: #F44336;
+    background-color: #FFEBEE;
+    color: #b71c1c;
 }
 
 /* For small screens (phones) */

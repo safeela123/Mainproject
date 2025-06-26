@@ -18,10 +18,10 @@
         {% csrf_token %}
         <div class="fields">
         <h2>REGISTER</h2>
-        <input type="text" placeholder="username" name="name" id="" class="input" style="transform:translate(0px,20px);"><br>
-        <input type="password" placeholder="password" name="password" class="input" style="transform:translate(0px,20px);"><br>
-        <input type="email" placeholder="email" name="email" class="input" style="transform:translate(0px,20px);"><br>
-        <input type="password" placeholder="confirm password" name="confirm_password" class="input" style="transform:translate(0px,20px);"><br>
+        <input type="text" placeholder="username" name="name" id="" class="input" style="transform:translate(0px,20px);"required><br>
+        <input type="email" placeholder="email" name="email" class="input" style="transform:translate(0px,20px);" required><br>
+        <input type="password" placeholder="password" name="password" class="input" style="transform:translate(0px,20px);" required><br>
+        <input type="password" placeholder="confirm password" name="confirm_password" class="input" style="transform:translate(0px,20px);"required><br>
         <input type="submit" value="submit" class="button">
         <p>already have an account ? <a href="../" style="text-decoration:none;color:black">Login</a></p>
     </form>

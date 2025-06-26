@@ -14,12 +14,13 @@
             <div class="sub1">
                 {% if user.is_authenticated %}
                 <div class="admission"><a href="../admission">Admission</a></div>
-                <div class="section"><a href="">Section</a></div>
+                <div class="section"><a href="{%url 'user_test_details'%}">Test details</a></div>
+                <div class="attendance"><a href="{%url 'user_attendance'%}">Attendance</a></div>
                 <div class="quiz"><a href="{% url 'quiz' %}">Quiz</a></div>
                 <div class="review"><a href="{% url 'review_page'%}">review</a></div>
                 <div class="contact"><a href="{% url 'send_email' %}">Contact Us</a></div>
                 <div class="logout"><a href="../logout">Logout</a></div>
-                <!-- <div class="profile"><a href="">Profile</a></div> -->
+                <div class="profile"><a href="{% url 'view_profile'%}">Profile</a></div>
 
                 {% else %}
                  <div><a href="../">Sign In</a></div>

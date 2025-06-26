@@ -2,6 +2,7 @@
 <html>
 <head>
     {% load static %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Quiz Questions</title>
     <link rel="stylesheet" href="{% static 'css/question_list.css'%}">
 </head>
@@ -14,10 +15,12 @@
                 <div class="adindex"><a href="../adindex">Home</a></div>
                 <div class="quizlist"><a href="{% url 'question_list'%}">Question List</a></div>
                 <div class="quizadd"><a href="{% url 'add_question'%}">Add Question</a></div>
-                <!-- <div class=""><a href=""></a></div>
-                <div class=""><a href=""></a></div> -->
                 <div class="logout"><a href="../logout">Logout</a></div>
-                <div class=""><a href=""></a></div>
+                <div class="addtest"><a href="{% url 'add_test'%}">Add test</a></div>
+                <div class="testlist"><a href="{% url 'test_list'%}">Test list</a></div>
+                <div class="add_attendance"><a href="{% url 'submit_attendance'%}">Add attendance</a></div>
+
+
 
                 {% else %}
                  <div><a href="../">Sign In</a></div>
@@ -32,7 +35,7 @@
    
 
     {% for question in questions %}
-        <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;margin-top:50px;height:200px;display:flex;flex-direction:column;justify-content:center;margin-left:30px;margin-right:40px;">
+        <div class="question-box" style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;margin-top:50px;height:200px;display:flex;flex-direction:column;justify-content:center;margin-left:30px;margin-right:40px;">
             <strong>Q{{ forloop.counter }}. {{ question.text }}</strong><br>
             <ul>
                 {% for choice in question.choices.all %}
@@ -47,6 +50,7 @@
             <a href="{% url 'delete_question' question.id %}" class="delete">Delete</a>
         </div>
         </div>
+       
     {% empty %}
         <p>No questions added yet.</p>
     {% endfor %}

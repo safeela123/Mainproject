@@ -9,22 +9,25 @@
 </head>
 <body>
      {%if request.user.is_authenticated %}
-    <div class="main">
-        <div class="nav">
+   <div class="main">
+         <div class="nav">
             <div class="signal"> <h2>signal</h2> </div>
             <div class="sub">
                 {% if user.is_authenticated %}
+                <div class="index"><a href="../index">Home</a></div>
                 <div class="admission"><a href="../admission">Admission</a></div>
-                <div class="section"><a href="">Section</a></div>
+                <div class="section"><a href="{%url 'user_test_details'%}">Test details</a></div>
+                <div class="attendance"><a href="{%url 'user_attendance'%}">Attendance</a></div>
                 <div class="quiz"><a href="{% url 'quiz' %}">Quiz</a></div>
+                <div class="review"><a href="{% url 'review_page'%}">review</a></div>
                 <div class="contact"><a href="{% url 'send_email' %}">Contact Us</a></div>
                 <div class="logout"><a href="../logout">Logout</a></div>
-                <div class="profile"><a href="">Profile</a></div>
+                <div class="profile"><a href="{% url 'view_profile' %}">Profile</a></div>
 
                 {% else %}
                  <div><a href="../">Sign In</a></div>
                 <div><a href="../register">Sign Up</a></div>
-                <div><a href="{% url 'send_email' %}">Contact Us</a></div>
+                <div><a href="">Contact Us</a></div>
 
                 {% endif %}
             </div>
@@ -120,7 +123,19 @@
     
 </table>
     </form>
+    {% if messages %}
+  <div class="message-container">
+    {% for message in messages %}
+      <div class="message {{ message.tags }}">
+        {{ message }}
+        <button class="close" onclick="this.parentElement.style.display='none';">&times;</button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
 </div>
+
+
     </div>
 
     

@@ -28,4 +28,21 @@ urlpatterns = [
     path('reset/done/', views.password_reset_complete, name='password_reset_complete'),
 #  review 
     path('reviews', views.review_page, name='review_page'),
+
+# attendance
+    path('adattendance', views.submit_attendance, name='submit_attendance'),
+    path('records', views.view_records, name='records'),
+    # path('delete/<int:attendance_id>', views.delete_attendance, name='delete_attendance'),
+    path('weeklyattendance', views.weekly_attendance, name='user_attendance'),
+
+# profile 
+path('profile', views.view_profile, name='view_profile'),
+path('profile_edit', views.edit_profile, name='edit_profile'),
+
+# test
+path('tests', views.test_list, name='test_list'),
+path('testadd', views.add_test, name='add_test'),
+path('testedit/<int:test_id>', views.edit_test, name='edit_test'),
+path('testdelete/<int:test_id>', views.delete_test, name='delete_test'),
+path('usertestlist',views.test_details, name='user_test_details'),
 ]

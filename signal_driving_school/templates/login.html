@@ -17,17 +17,25 @@
     <form action="../" method="POST">
         {% csrf_token %}
         <h1>Login</h1>
-        <input type="text" placeholder="username" name="name" id="" class="input" style="transform:translate(0px,20px);"><br>
-        <input type="password" placeholder="password" name="psw" class="input" style="transform:translate(0px,20px);"><br>
+        <input type="text" placeholder="username" name="name" id="" class="input" style="transform:translate(0px,20px);" required><br>
+        <input type="password" placeholder="password" name="psw" class="input" style="transform:translate(0px,20px);"required><br>
         <tr class="justify" style="transform:translate(-80px,-10px)">
                <div class="forgot">
                 <input type="checkbox" name="check" class="check" style="color:white" checked> remember me
                 <a href="{% url 'password_reset' %}" style="color:white;text-decoration:none;white-space:nowrap;">forget password</a>
             </div>
         <input type="submit" value="Login" class="button">
-        <p>dont you have an account ? <a href="../register" style="text-decoration:none;color:black">Register</a></p>
+        <p>dont you have an account ? <a href="../register" style="text-decoration:none;color:black">Register</a></p><br>
+
+         {% if messages %}
+    {% for message in messages %}
+        <div class="alert" style="color:red;">{{ message }}</div>
+    {% endfor %}
+{% endif %}
     </form>
     </div></div>
     </div>
+
+   
 </body>
 </html>

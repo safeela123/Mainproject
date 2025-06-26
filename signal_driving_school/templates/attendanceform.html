@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Submit Attendance</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/attendanceform.css' %}">
+</head>
+<body>
+    <div class="main">
+        <div class="nav">
+            <div class="signal">
+                <h2>Signal</h2>
+            </div>
+            <div class="sub">
+                {% if user.is_authenticated %}
+                    <div class="adindex"><a href="../adindex">Home</a></div>
+                    <div class="quizlist"><a href="{% url 'question_list' %}">Question List</a></div>
+                    <div class="quizadd"><a href="{% url 'add_question' %}">Add Question</a></div>
+                    <div class="logout"><a href="../logout">Logout</a></div>
+                    <div class="addtest"><a href="{% url 'add_test' %}">Add Test</a></div>
+                    <div class="testlist"><a href="{% url 'test_list' %}">Test Details List</a></div>
+                    <div class="add_attendance"><a href="{% url 'submit_attendance' %}">Add Attendance</a></div>
+                {% else %}
+                    <div><a href="../">Sign In</a></div>
+                    <div><a href="../register">Sign Up</a></div>
+                    <div><a href="">Contact Us</a></div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if user.is_authenticated %}
+        <div class="container">
+            <h1>Attendance Form</h1>
+
+            <!-- Message display -->
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li class="{{ message.tags }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            <form method="POST" class="attendance-form">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label>Student Ad. No:</label>
+                    <input type="text" name="student_id" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Date:</label>
+                    <input type="date" name="date" max="{{ today }}" value="{{ today }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Lesson Type:</label>
+                    <select name="lesson_type" required>
+                        <option value="Classroom">Classroom</option>
+                        <option value="Behind the Wheel">Behind the Wheel</option>
+                    </select>
+                </div>
+
+                <div class="form-group-row">
+                    <div class="form-group half">
+                        <label>Time In:</label>
+                        <input type="time" name="time_in" required>
+                    </div>
+
+                    <div class="form-group half">
+                        <label>Time Out:</label>
+                        <input type="time" name="time_out" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Notes:</label>
+                    <textarea name="notes" rows="3" placeholder="Optional..."></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">Submit</button>
+                <a href="{% url 'records' %}" class="link-btn">View Records</a>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

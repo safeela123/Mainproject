@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+    }
+
+    .main {
+      min-height: 100vh;
+      width: 100%;
+      padding: 10px;
+    }
+
+    /* ==== NAVBAR ==== */
+    .nav {
+      background-color: red;
+      color: black;
+      padding: 10px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .signal h2 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    .sub {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .sub a {
+      color: black;
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      transition: background 0.3s;
+      font-size: 0.95rem;
+    }
+
+    .sub a:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .profile-card {
+      background: #fff;
+      padding: 25px;
+      max-width: 600px;
+      width: 100%;
+      margin: 20px auto;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+
+    img {
+      width: 100%;
+      max-width: 150px;
+      border-radius: 5px;
+      display: block;
+      margin-bottom: 15px;
+    }
+
+    .row {
+      margin-bottom: 12px;
+      word-wrap: break-word;
+    }
+
+    .label {
+      font-weight: bold;
+    }
+
+    .edit-link {
+      display: inline-block;
+      margin-top: 20px;
+      background: #007bff;
+      color: white;
+      padding: 10px 15px;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+
+    .edit-link:hover {
+      background: #0056b3;
+    }
+
+    /* ==== MEDIA QUERIES ==== */
+    @media (max-width: 768px) {
+      .nav {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px;
+      }
+
+      .sub {
+        justify-content: flex-start;
+        gap: 8px;
+        margin-top: 10px;
+        flex-wrap: wrap;
+      }
+
+      .profile-card {
+        padding: 20px;
+      }
+
+      .sub a {
+        font-size: 0.9rem;
+        padding: 6px 10px;
+      }
+
+      .edit-link {
+        width: 100%;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .signal h2 {
+        font-size: 1.2rem;
+      }
+
+      .sub a {
+        font-size: 0.85rem;
+        padding: 5px 8px;
+      }
+
+      img {
+        max-width: 120px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="main">
+    <div class="nav">
+      <div class="signal">
+        <h2>signal</h2>
+      </div>
+      <div class="sub">
+        {% if user.is_authenticated %}
+        <div class="admission"><a href="../admission">Admission</a></div>
+        <div class="section"><a href="{%url 'user_test_details'%}">Test details</a></div>
+        <div class="attendance"><a href="{%url 'user_attendance'%}">Attendance</a></div>
+        <div class="quiz"><a href="{% url 'quiz' %}">Quiz</a></div>
+        <div class="review"><a href="{% url 'review_page'%}">Review</a></div>
+        <div class="contact"><a href="{% url 'send_email' %}">Contact Us</a></div>
+        <div class="logout"><a href="../logout">Logout</a></div>
+        <div class="profile"><a href="{% url 'view_profile'%}">Profile</a></div>
+        {% else %}
+        <div><a href="../">Sign In</a></div>
+        <div><a href="../register">Sign Up</a></div>
+        <div><a href="">Contact Us</a></div>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if error %}
+    <p style="color: red; text-align: center;margin-top:20%;">{{ error }}</p>
+    {% else %}
+    <div class="profile-card">
+      <h2>{{ admission.name }}'s Profile</h2>
+      {% if admission.photo %}
+      <img src="{{ admission.photo.url }}" alt="Profile Photo">
+      {% endif %}
+
+      <div class="row"><span class="label">Date of Birth:</span> {{ admission.date_of_birth }}</div>
+      <div class="row"><span class="label">Gender:</span> {{ admission.gender }}</div>
+      <div class="row"><span class="label">Email:</span> {{ admission.email }}</div>
+      <div class="row"><span class="label">Phone:</span> {{ admission.phone }}</div>
+      <div class="row"><span class="label">Address:</span> {{ admission.address }}</div>
+      <div class="row"><span class="label">Emergency Contact:</span> {{ admission.emergency_contact }}</div>
+      <div class="row"><span class="label">Aadhar Number:</span> {{ admission.aadhar_number }}</div>
+      <div class="row"><span class="label">Vehicle Type:</span> {{ admission.vehicle_type }}</div>
+      <div class="row"><span class="label">Preferred Batch:</span> {{ admission.preferred_batch_time }}</div>
+      <div class="row"><span class="label">Admission Date:</span> {{ admission.admission_date }}</div>
+      {% if admission.identity_proof_upload %}
+      <div class="row"><span class="label">ID Proof:</span> <a href="{{ admission.identity_proof_upload.url }}" target="_blank">View</a></div>
+      {% endif %}
+      <a class="edit-link" href="{% url 'edit_profile' %}">Edit Profile</a>
+    </div>
+    {% endif %}
+  </div>
+</body>
+</html>

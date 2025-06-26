@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Edit Profile</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f6f8;
+      color: #333;
+    }
+
+    .main {
+      min-height: 100vh;
+      padding: 10px;
+    }
+
+    /* ==== NAVBAR ==== */
+    .nav {
+      background-color: red;
+      color: white;
+      padding: 12px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .signal h2 {
+      margin: 0;
+      font-size: 1.6rem;
+    }
+
+    .sub {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .sub a {
+      color: black;
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      transition: background 0.3s ease;
+      font-size: 0.95rem;
+    }
+
+    .sub a:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* ==== FORM CONTAINER ==== */
+    .container {
+      background: #fff;
+      padding: 30px;
+      max-width: 700px;
+      width: 100%;
+      margin: 30px auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      margin-bottom: 25px;
+      font-size: 1.8rem;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 5px;
+      margin-top: 15px;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="file"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-top: 5px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    button {
+      margin-top: 20px;
+      background: #1976d2;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    button:hover {
+      background: #115293;
+    }
+
+    /* ==== RESPONSIVE ==== */
+    @media (max-width: 768px) {
+      .nav {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .sub {
+        justify-content: flex-start;
+        margin-top: 10px;
+      }
+
+      .container {
+        padding: 20px;
+        margin: 20px 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .signal h2 {
+        font-size: 1.3rem;
+      }
+
+      .sub a {
+        font-size: 0.85rem;
+        padding: 5px 10px;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      button {
+        font-size: 0.95rem;
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="main">
+    <div class="nav">
+      <div class="signal"><h2>signal</h2></div>
+      <div class="sub">
+        {% if user.is_authenticated %}
+          <a href="../admission">Admission</a>
+          <a href="{% url 'user_test_details' %}">Test details</a>
+          <a href="{% url 'user_attendance' %}">Attendance</a>
+          <a href="{% url 'quiz' %}">Quiz</a>
+          <a href="{% url 'review_page' %}">Review</a>
+          <a href="{% url 'send_email' %}">Contact Us</a>
+          <a href="../logout">Logout</a>
+          <a href="{% url 'view_profile' %}">Profile</a>
+        {% else %}
+          <a href="../">Sign In</a>
+          <a href="../register">Sign Up</a>
+          <a href="">Contact Us</a>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="container">
+      {% if error %}
+        <p style="color: red; text-align: center;">{{ error }}</p>
+      {% else %}
+        <h2>Edit Profile</h2>
+        <form method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          <label>Name:</label>
+          <input type="text" name="name" value="{{ admission.name }}"/>
+
+          <label>Date of Birth:</label>
+          <input type="date" name="date_of_birth" value="{{ admission.date_of_birth|date:"Y-m-d" }}">
+
+          <label>Gender:</label>
+          <select name="gender">
+            <option value="male" {% if admission.gender == "male" %}selected{% endif %}>Male</option>
+            <option value="female" {% if admission.gender == "female" %}selected{% endif %}>Female</option>
+            <option value="other" {% if admission.gender == "other" %}selected{% endif %}>Other</option>
+          </select>
+
+          <label>Phone:</label>
+          <input type="text" name="phone" value="{{ admission.phone }}"/>
+
+          <label>Address:</label>
+          <textarea name="address">{{ admission.address }}</textarea>
+
+          <label>Emergency Contact:</label>
+          <input type="text" name="emergency_contact" value="{{ admission.emergency_contact }}"/>
+
+          <label>Vehicle Type:</label>
+          <select name="vehicle_type">
+            <option value="car" {% if admission.vehicle_type == "car" %}selected{% endif %}>Car</option>
+            <option value="bike" {% if admission.vehicle_type == "bike" %}selected{% endif %}>Bike</option>
+            <option value="both" {% if admission.vehicle_type == "both" %}selected{% endif %}>Both</option>
+          </select>
+
+          <label>Preferred Batch Time:</label>
+          <select name="preferred_batch_time">
+            <option value="morning" {% if admission.preferred_batch_time == "morning" %}selected{% endif %}>Morning</option>
+            <option value="afternoon" {% if admission.preferred_batch_time == "afternoon" %}selected{% endif %}>Afternoon</option>
+            <option value="evening" {% if admission.preferred_batch_time == "evening" %}selected{% endif %}>Evening</option>
+          </select>
+
+          <label>Profile Photo:</label>
+          <input type="file" name="photo" >{{admission.photo.url}}
+
+          <label>Identity Proof:</label>
+          <input type="file" name="identity_proof_upload">{{admission.identity_proof_upload.url}}
+
+
+          <button type="submit">Save Changes</button>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+</body>
+</html>

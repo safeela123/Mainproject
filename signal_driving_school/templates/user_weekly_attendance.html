@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weekly Attendance</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Critical for mobile responsiveness -->
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f9f9f9;
+        }
+
+        .main {
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* ==== NAVBAR ==== */
+        .nav {
+            background-color: red;
+            color: black;
+            padding: 10px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .signal h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .sub {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .sub a {
+            color: black;
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        .sub a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* ==== CONTENT ==== */
+        .attendanceweek {
+            padding: 20px;
+        }
+
+        .error {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+            margin-top:20%;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 600px;
+            border-collapse: collapse;
+            margin: 0 auto;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f0f0f0;
+        }
+
+        tr.highlight-today {
+            background-color: #d0f0c0;
+            font-weight: bold;
+        }
+
+        /* ==== RESPONSIVE ==== */
+        @media (max-width: 1024px) {
+            .sub {
+                justify-content: center;
+                gap: 8px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .signal h2 {
+                font-size: 1.3rem;
+            }
+
+            .sub {
+                flex-direction: column;
+                align-items: flex-start;
+                width: 100%;
+            }
+
+            .sub a {
+                width: 100%;
+                display: block;
+            }
+
+            h2 {
+                font-size: 1.2rem;
+            }
+
+            th, td {
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .signal h2 {
+                font-size: 1.1rem;
+            }
+
+            th, td {
+                font-size: 0.85rem;
+                padding: 8px;
+            }
+
+            h2 {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="main">
+    <!-- Navigation -->
+    <div class="nav">
+        <div class="signal"><h2>signal</h2></div>
+        <div class="sub">
+            {% if user.is_authenticated %}
+                <a href="../admission">Admission</a>
+                <a href="{% url 'user_test_details' %}">Test Details</a>
+                <a href="{% url 'user_attendance' %}">Attendance</a>
+                <a href="{% url 'quiz' %}">Quiz</a>
+                <a href="{% url 'review_page' %}">Review</a>
+                <a href="{% url 'send_email' %}">Contact Us</a>
+                <a href="../logout">Logout</a>
+                <a href="{% url 'view_profile' %}">Profile</a>
+            {% else %}
+                <a href="../">Sign In</a>
+                <a href="../register">Sign Up</a>
+                <a href="">Contact Us</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Attendance Content -->
+    <div class="attendanceweek">
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% else %}
+            <h2>Attendance for the week: {{ start_week }} to {{ end_week }}</h2>
+
+            {% if attendance_records %}
+                <div class="table-container">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Lesson Type</th>
+                            <th>Time In</th>
+                            <th>Time Out</th>
+                            <th>Notes</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for record in attendance_records %}
+                            <tr class="{% if record.date == today %}highlight-today{% endif %}">
+                                <td>{{ record.date }}</td>
+                                <td>{{ record.lesson_type }}</td>
+                                <td>{{ record.time_in }}</td>
+                                <td>{{ record.time_out }}</td>
+                                <td>{{ record.notes|default:"-" }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p style="text-align:center;">No attendance records found for this week.</p>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
+</body>
+</html>
+

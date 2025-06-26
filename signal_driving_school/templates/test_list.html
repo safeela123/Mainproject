@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Details</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        .main {
+            width: 100%;
+        }
+
+        .nav {
+            background-color: red;
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+        }
+
+        .signal h2 {
+            color: black;
+            margin: 0;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: black;
+            margin: 0 10px;
+            font-size: 18px;
+        }
+
+       .sub {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+  white-space: nowrap;
+  padding-bottom: 5px;
+}
+
+/* Hide scrollbar on Webkit (optional) */
+.sub::-webkit-scrollbar {
+  display: none;
+}
+
+        .container {
+            max-width: 700px;
+            background: white;
+            margin: 20px auto;
+            margin-top:10%;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 8px rgba(0,0,0,0.1);
+
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: auto;
+            word-wrap: break-word;
+        }
+
+        th, td {
+            border-bottom: 1px solid #ddd;
+            padding: 10px 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        a.button {
+            display: inline-block;
+            padding: 8px 15px;
+            margin: 10px 0;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+
+        a.button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Tablets (481px–768px) */
+        @media screen and (min-width: 481px) and (max-width: 768px) {
+            .nav {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .nav a {
+                font-size: 16px;
+                margin: 5px 0;
+            }
+
+            .sub {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .container {
+                padding: 15px;
+                margin: 15px;
+            }
+
+            table {
+                font-size: 14px;
+            }
+        }
+
+        /* Mobile (up to 480px) */
+        @media screen and (max-width: 480px) {
+            .nav {
+                flex-direction: column;
+                padding: 10px;
+                gap: 10px;
+            }
+
+            .nav a {
+                font-size: 14px;
+                margin: 5px 0;
+            }
+
+            .sub {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .container {
+                padding: 10px;
+                margin: 10px;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            a.button {
+                padding: 6px 12px;
+                font-size: 14px;
+            }
+        }
+
+        /* Large screens */
+        @media screen and (min-width: 1025px) {
+            .nav a {
+                font-size: 18px;
+            }
+
+            table {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="main">
+    <div class="nav">
+        <div class="signal"><h2>signal</h2></div>
+        <div class="sub">
+            {% if user.is_authenticated %}
+                <div class="adindex"><a href="../adindex">Home</a></div>
+                <div class="quizlist"><a href="{% url 'question_list' %}">Question List</a></div>
+                <div class="quizadd"><a href="{% url 'add_question' %}">Add Question</a></div>
+                <div class="logout"><a href="../logout">Logout</a></div>
+                <div class="addtest"><a href="{% url 'add_test' %}">Add test</a></div>
+                <div class="testlist"><a href="{% url 'test_list' %}">Test list</a></div>
+                <div class="add_attendance"><a href="{% url 'submit_attendance' %}">Add attendance</a></div>
+            {% else %}
+                <div><a href="../">Sign In</a></div>
+                <div><a href="../register">Sign Up</a></div>
+                <div><a href="">Contact Us</a></div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if request.user.is_authenticated %}
+    <div class="container">
+        <h2>Test Details</h2>
+        <a href="{% url 'add_test' %}" class="button">Add New Test</a>
+        {% if tests %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Test Type</th>
+                    <th>Attempt</th>
+                    <th>Date</th>
+                    <th>Score</th>
+                    <th>Passed</th>
+                    <th></th>
+                    <th></th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for test in tests %}
+                <tr>
+                    <td>{{ test.get_test_type_display }}</td>
+                    <td>{{ test.attempt_number }}</td>
+                    <td>{{ test.test_date }}</td>
+                    <td>{{ test.score }}</td>
+                    <td>{% if test.passed %}Yes{% else %}No{% endif %}</td>
+                    <td><a href="{% url 'edit_test' test.id %}" style="border:1px solid black;padding:7px;text-decoration:none;width:30px;border-radius:5px;background-color:orange;">Edit</a></td>
+                    <td><a href="{% url 'delete_test' test.id %}" style="border:1px solid black;padding:7px;text-decoration:none;width:30px;border-radius:5px;background-color:rgb(241, 73, 73);">Delete</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <p>No tests added yet.</p>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+</body>
+</html>

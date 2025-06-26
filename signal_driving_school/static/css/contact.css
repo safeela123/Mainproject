@@ -1,137 +1,159 @@
-*{
-    margin:0px;
+/* Reset & Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-.main{
-    height:100vh;
-    width:100%;
-    background:#222;
-}
-.sub{
-    width:60%;
-    height:80vh;
-     color:white;
-    position:relative;
-    top:20%;
-    left:50%;
-}
-.btn{
-    background-color: blueviolet;
-    color:black;
-    width:410px;
-    height:30px;
-}
-h2{
-    margin-bottom:20px;
-}
-.name{
-    width:400px;
-}
-.email{
-    width:400px;
-}
-.subject{
-    width:400px;
-}
-.message{
-    width:400px;
+body {
+  font-family: Arial, sans-serif;
+  background-color: #111;
+  color: #fff;
+  line-height: 1.6;
 }
 
-/* Smartphones */
-@media (max-width: 600px) {
-    .sub {
-        width: 90%;
-        top: 10%;
-        left: 5%;
-        transform: none;
-    }
-
-    .name,
-    .email,
-    .subject,
-    .message,
-    .btn {
-        width: 100% !important;
-        max-width: 100%;
-    }
+/* NAVBAR */
+.nav {
+  background-color: red;
+  color: black;
+  padding: 15px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+.signal h2 {
+  font-size: 1.5rem;
+  color: black;
+}
+.sub1 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+.sub1 a {
+  color: black;
+  background: none;
+  text-decoration: none;
+  padding: 6px 12px;
+  font-size:17px;
+}
+.sub1 a:hover {
+  text-decoration: underline;
 }
 
-/* Tablets */
-@media (min-width: 601px) and (max-width: 1024px) {
-    .sub {
-        width: 80%;
-        left: 10%;
-        top: 15%;
-    }
-
-    .name,
-    .email,
-    .subject,
-    .message,
-    .btn {
-        width: 100% !important;
-    }
+/* CONTACT FORM */
+.sub {
+  background-color: #222;
+  margin: 40px auto;
+  padding: 20px; /* reduced */
+  border-radius: 10px;
+  max-width: 500px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.5);
+  text-align: center;
+}
+.sub h2 {
+  color: #ffc107;
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+.sub input,
+.sub textarea {
+  width: 100%;
+  padding: 8px; /* reduced */
+  margin-bottom: 12px; /* reduced */
+  background: #333;
+  color: white;
+  border: 1px solid #444;
+  border-radius: 6px;
+}
+.sub textarea {
+  resize: vertical;
+  height: 100px; /* reduced */
+}
+.sub .btn {
+  background-color: #7c4dff;
+  border: none;
+  padding: 10px; /* reduced */
+  color: white;
+  border-radius: 5px;
+  font-size: 0.95rem;
+  width: 100%;
+  cursor: pointer;
+}
+.sub .btn:hover {
+  background-color: #5e35b1;
 }
 
-/* Laptops / Medium Screens */
-@media (min-width: 1025px) and (max-width: 1440px) {
-    .sub {
-        width: 65%;
-        left: 17.5%;
-    }
+/* FOOTER */
+footer {
+  background: #222;
+  color: #eee;
+  padding: 40px 20px;
+  text-align: center;
+}
+.footer-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  text-align: left;
+  gap: 30px;
+}
+footer h3,
+footer h4 {
+  color: #f39c12;
+  margin-bottom: 15px;
+}
+footer a {
+  color: #eee;
+  text-decoration: none;
+}
+footer a:hover {
+  text-decoration: underline;
+}
+footer img {
+  vertical-align: middle;
+  margin-right: 8px;
 }
 
-/* Large Screens */
-@media (min-width: 1441px) {
-    .sub {
-        width: 50%;
-        left: 25%;
-    }
-}
+/* RESPONSIVE DESIGN */
 
-body{
-margin:0px;
-}
-.main{
-    min-height:100vh;
-    width:100%;
-
-}
-.nav{
-    width:100%;
-    height:50px;
-    background-color:red;
-    display:flex;
-    justify-content:space-between;
+/* Tablets (601px–1024px) */
+@media screen and (max-width: 1024px) {
+  .sub1 {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .sub {
+    max-width: 85%;
+  }
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
     align-items: center;
-    
-}
-.nav a{
-    text-decoration:none;
-    color:black;
+  }
 }
 
-.signal{
-    flex:1;
-}
-.sub1{
-    flex:1;
-   width:100%;
-    display:flex;
-    justify-content:space-between;
-    
-}
-
-/* For tablets and below */
-@media screen and (max-width: 768px) {
-    .nav {
-        flex-direction: column;
-        height: auto;
-        padding: 10px;
-    }
-
-    .sub1 {
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
-    }
+/* Mobiles (<=600px) */
+@media screen and (max-width: 600px) {
+  .nav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .sub1 {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .sub {
+    max-width: 90%;
+    padding: 15px;
+  }
+  .footer-container {
+    flex-direction: column;
+    gap: 20px;
+  }
 }

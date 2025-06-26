@@ -10,24 +10,27 @@
 <body>
      {%if request.user.is_authenticated %}
     <div class="main">
-        <div class="nav">
+      <div class="nav">
             <div class="signal"> <h2>signal</h2> </div>
             <div class="sub">
-              
-                <div class="admission"><a href="../admission">Admission</a></div>
-                <div class="section"><a href="">Section</a></div>
-                <div class="quiz"><a href="{% url 'quiz' %}">Quiz</a></div>
-                <div class="contact"><a href="{% url 'send_email' %}">Contact Us</a></div>
+                {% if user.is_authenticated %}
+                <div class="adindex"><a href="../adindex">Home</a></div>
+                <div class="quizlist"><a href="{% url 'question_list'%}">Question List</a></div>
+                <div class="quizadd"><a href="{% url 'add_question'%}">Add Question</a></div>
                 <div class="logout"><a href="../logout">Logout</a></div>
-                <div class="profile"><a href="">Profile</a></div>
+                <div class="addtest"><a href="{% url 'add_test'%}">Add test</a></div>
+                <div class="testlist"><a href="{% url 'test_list'%}">Test list</a></div>
+                <div class="add_attendance"><a href="{% url 'submit_attendance'%}">Add attendance</a></div>
+
+
 
                 {% else %}
                  <div><a href="../">Sign In</a></div>
                 <div><a href="../register">Sign Up</a></div>
-                <div><a href="{% url 'send_email' %}">Contact Us</a></div>
+                <div><a href="">Contact Us</a></div>
 
                 {% endif %}
-             {% if user.is_authenticated %}
+                 {%if request.user.is_authenticated %}
             </div>
         </div>
         <div class="form">
@@ -47,10 +50,10 @@
         <td> <label for="gender">gender:</label></td>
 
             <td>  <select name="gender" id="gender" >
-            <option  selected disabled>--- Select Your Gender ---</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
+        
+            <option value="male"{% if data.gender == "male" %}selected{% endif %}>Male</option>
+            <option value="female"{% if data.gender == "female" %}selected{% endif %}>Female</option>
+            <option value="other"{% if data.gender == "other" %}selected{% endif %}>Other</option>
         </select><br></td>
     
 <!-- </tr> -->
@@ -82,20 +85,25 @@
         
        <tr>
         <td> <label for="identity_proof">adhaar photo:</label></td>
-         <td>  <input type="file" name="identity_proof_upload" id="" class="identity_proof" placeholder="identity proof" value="{{data.identity_proof_upload}}"><br></td>
+         <td>  <input type="file" name="identity_proof_upload" id="" class="identity_proof" placeholder="identity proof" required>
+          {% if data.identity_proof_upload %}
+    <img src="{{ data.identity_proof_upload.url }}" alt="Current Photo" height="80">
+{% endif %}<br></td>
     <!-- </tr> -->
 
        <!-- <tr>  -->
        <td> <label for="photo">photo:</label></td>
-        <td>  <input type="file" name="photo" id="photo" placeholder="select file" class="photo"  value="{{data.photo}}" required><br></td>
+        <td>  <input type="file" name="photo" id="photo" placeholder="select file" class="photo"  " required>{% if data.photo %}
+    <img src="{{ data.photo.url }}" alt="Current Photo" height="80">
+{% endif %}<br></td>
  </tr>
 <tr>
   <td><label for="vehicle">Select vehicle:</label></td>
   <td>
     <select disabled>
   <option value="car" {% if selected == 'car' %}selected{% endif %}>Car</option>
-  <option value="bike" {% if selected == 'bike' %}selected{% endif %}>Bike</option>
-  <option value="both" {% if selected == 'both' %}selected{% endif %}>Both</option>
+  <option value="bike" {% if selected == 'bike' %}selected{% endif %} >Bike</option>
+  <option value="both" {% if selected == 'both' %}selected{% endif %} >Both</option>
 </select>
 
 <!-- Hidden field to actually submit -->
@@ -114,9 +122,9 @@
         <td><label for="batch">Schedule:</label></td>
 
     <td> <select name="preferred_batch_time" id="schedule">
-        <option selected disabled>--- Select Batch</option>
-        <option value="morning">Morning</option>
-        <option value="evening">Evening</option>
+       
+        <option value="morning"{%if data.preffered_batch_time == "morning"%}selected{% endif %}>Morning</option>
+        <option value="evening"{%if data.preffered_batch_time == "evening"%}selected{% endif %}>Evening</option>
        </select><br>  </td>
     </tr>
        
@@ -147,6 +155,7 @@
     }
   }
 </script>
+{% endif %}
 {% endif %}
 </body>
 </html>

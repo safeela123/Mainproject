@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 
 class Admission(models.Model):
     # Personal Information
+    user = models.OneToOneField(User, on_delete=models.CASCADE)  # Link to auth user
     name = models.CharField(max_length=100)
     date_of_birth = models.DateField()
     gender = models.CharField(max_length=10, choices=[
@@ -40,7 +41,22 @@ class Admission(models.Model):
 
     def __str__(self):
         return self.name
+    
+class Attendance(models.Model):
+    student = models.ForeignKey(Admission,on_delete=models.CASCADE)
+    date = models.DateField()
+    lesson_type = models.CharField(max_length=50, choices=[
+        ('Classroom', 'Classroom'),
+        ('Behind the Wheel', 'Behind the Wheel')
+    ])
+    
+    time_in = models.TimeField()
+    time_out = models.TimeField()
+    notes = models.TextField(blank=True)
 
+    def __str__(self):
+        return f"{self.student_name} - {self.date}"
+    
 class Payment(models.Model):
     student = models.ForeignKey(Admission, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -79,3 +95,17 @@ class Review(models.Model):
 
     def __str__(self):
         return f"{self.rating} stars - {self.review_text[:30]}..."
+    
+class TestDetails(models.Model):
+    admission = models.ForeignKey('Admission', on_delete=models.CASCADE, related_name='tests')
+    test_type = models.CharField(max_length=50, choices=[
+        ('theory', 'Theory Test'),
+        ('practical', 'Practical Test'),
+    ])
+    test_date = models.DateField()
+    score = models.PositiveIntegerField()
+    passed = models.BooleanField(default=False)
+    attempt_number = models.PositiveIntegerField(default=1)  # Added field
+
+    def __str__(self):
+        return f"{self.get_test_type_display()} - Attempt {self.attempt_number} on {self.test_date} ({'Passed' if self.passed else 'Failed'})"

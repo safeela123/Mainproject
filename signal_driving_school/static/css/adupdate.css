@@ -22,13 +22,15 @@ margin:0px;
 
 .signal{
     flex:1;
+    margin-left:3%;
 }
 .sub{
-    flex:1;
+    flex:2;
    width:100%;
     display:flex;
     justify-content:space-between;
-    
+    font-size:18px;
+    margin-right:3%;
 }
 .form{
     margin:50px;

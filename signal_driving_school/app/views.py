@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from .models import *
 from django.contrib.auth.models import User,auth
 from django.core.mail import send_mail
@@ -19,6 +19,15 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.core.paginator import Paginator
 import random
+from datetime import datetime
+from django.utils import timezone
+from datetime import timedelta
+from django.views.decorators.csrf import csrf_protect
+from django.middleware.csrf import get_token as csrf
+from django.http import HttpResponseForbidden
+from django.utils.dateparse import parse_date
+
+
 # Create your views here.
 # register
 
@@ -37,20 +46,21 @@ def register(request):
     return render(request,'register.html',{'error':'Passwords do not match'})
         
 def login(request):
-    if request.method=='POST':
-        name=request.POST['name']
-        psw=request.POST['psw']
-        user=auth.authenticate(username=name,password=psw)
+    if request.method == 'POST':
+        name = request.POST['name']
+        psw = request.POST['psw']
+        user = auth.authenticate(username=name, password=psw)
         if user is not None:
+            auth.login(request, user)
             if user.is_superuser:
-                auth.login(request, user)  # Log in the superuser
-                return redirect(adindex)  # Redirect to superuser index page
+                return redirect(adindex)
             else:
-                auth.login(request, user)  # Log in the regular user
-                return redirect(index)  # Redirect to regular user index page
+                return redirect(index)
         else:
-            return redirect('login')  # Redirect to login page if authentication fails
-    return render(request,'login.html')
+            messages.error(request, "Invalid username or password")  # Error message
+            return redirect('login')
+    return render(request, 'login.html')
+
 
 def logout(request):
  
@@ -74,18 +84,35 @@ def adindex(request):
         combined=zip(payment,students)
     return render(request,'adindex.html',{'combined':combined})
 
+
+
+from django.views.decorators.csrf import csrf_protect
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.urls import reverse
+import razorpay
+from .models import Admission, Payment
+from django.conf import settings
+
+@csrf_protect
 def admission(request):
     if not request.user.is_authenticated:
-        return redirect('login')  # Redirect unauthenticated users to login
+        return redirect('login')
+
+    if Admission.objects.filter(user=request.user).exists():
+        messages.error(request, "You have already taken admission. You can't apply again.")
+        # return redirect(index)  # ✅ Make sure 'index' is quoted and defined in urls
 
     if request.method == "POST":
         name = request.POST.get('name')
         dob = request.POST.get('date_of_birth')
         gender = request.POST.get('gender')
         email = request.POST.get('email')
+
         if Admission.objects.filter(email=email).exists():
             messages.error(request, "This email is already registered.")
             return redirect(admission)
+
         phone = request.POST.get('phone')
         address = request.POST.get('address')
         emergency = request.POST.get('emergency_contact')
@@ -106,8 +133,8 @@ def admission(request):
             messages.error(request, "Please select a valid vehicle type.")
             return redirect(admission)
 
-        # Save admission record
         adm = Admission.objects.create(
+            user=request.user,
             name=name,
             date_of_birth=dob,
             gender=gender,
@@ -121,9 +148,7 @@ def admission(request):
             vehicle_type=vehicle_type,
             preferred_batch_time=batch
         )
-        adm.save()
 
-        # Create Razorpay Order
         client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
         razorpay_order = client.order.create({
             'amount': amount * 100,
@@ -131,16 +156,13 @@ def admission(request):
             'payment_capture': 1
         })
 
-        # Save payment with pending status
-        money= Payment.objects.create(
+        money = Payment.objects.create(
             student=adm,
             user=request.user,
             amount=amount,
             razorpay_order_id=razorpay_order['id'],
             payment_status='pending'
         )
-        money.save()
-        # Prepare context for Razorpay checkout
 
         callback_url = request.build_absolute_uri(reverse('payment_success'))
 
@@ -151,12 +173,64 @@ def admission(request):
             'callback_url': callback_url,
             'admission': adm
         }
-        
-        context.update(csrf(request))  # 🔥 This adds 'csrf_token' to the context
+
         return render(request, 'payment.html', context)
 
     return render(request, 'admission.html')
 
+
+# ---------update-------------------
+def adupdate(request,id):
+        data=Admission.objects.get(id=id)
+        data1=Payment.objects.get(student=data)
+
+        if not request.user.is_authenticated:
+            return redirect('login')  # Redirect unauthenticated users to login
+
+        if request.method == "POST":
+            name = request.POST.get('name')
+            dob = request.POST.get('date_of_birth')
+            gender = request.POST.get('gender')
+            email = request.POST.get('email')
+            phone = request.POST.get('phone')
+            address = request.POST.get('address')
+            emergency = request.POST.get('emergency_contact')
+            aadhar = request.POST.get('aadhar_number')
+            identity_proof = request.FILES.get('identity_proof_upload')
+            photo = request.FILES.get('photo')
+            # vehicle_type = request.POST.get('vehicle_type')
+            batch = request.POST.get('preferred_batch_time')
+            # Calculate amount
+            # if vehicle_type == 'car':
+            #     amount = 8000
+            # elif vehicle_type == 'bike':
+            #     amount = 2000
+            # elif vehicle_type == 'both':
+            #     amount = 10000
+            # else:
+            #     messages.error(request, "Please select a valid vehicle type.")
+        
+            data.name=name
+            data.date_of_birth=dob
+            data.gender=gender
+            data.email=email
+            data.phone=phone
+            data.address=address
+            data.emergency_contact=emergency
+            data.aadhar_number=aadhar
+            data.identity_proof_upload=identity_proof
+            data.photo=photo
+            data.preferred_batch_time=batch
+            
+            data.save()
+            return redirect(adindex)
+        
+        return render(request,'adupdate.html',{'data':data,'data1':data1})
+# ---------delete------------
+def delete(request,id):
+    Admission.objects.get(id=id).delete()
+    
+    return redirect(adindex)
 
 #------------ payment success ---------------
 
@@ -230,63 +304,7 @@ def payment_success(request):
 
     return HttpResponseBadRequest("Invalid request method.")
 
-# ---------update-------------------
-def adupdate(request,id):
-        data=Admission.objects.get(id=id)
-        data1=Payment.objects.get(student=data)
 
-        if not request.user.is_authenticated:
-            return redirect('login')  # Redirect unauthenticated users to login
-
-        if request.method == "POST":
-            name = request.POST.get('name')
-            dob = request.POST.get('date_of_birth')
-            gender = request.POST.get('gender')
-            email = request.POST.get('email')
-            phone = request.POST.get('phone')
-            address = request.POST.get('address')
-            emergency = request.POST.get('emergency_contact')
-            aadhar = request.POST.get('aadhar_number')
-            identity_proof = request.FILES.get('identity_proof_upload')
-            photo = request.FILES.get('photo')
-            vehicle_type = request.POST.get('vehicle_type')
-            batch = request.POST.get('preferred_batch_time')
-            # Calculate amount
-            if vehicle_type == 'car':
-                amount = 8000
-            elif vehicle_type == 'bike':
-                amount = 2000
-            elif vehicle_type == 'both':
-                amount = 10000
-            else:
-                messages.error(request, "Please select a valid vehicle type.")
-            
-            # data1.amount=amount
-            # data1.save()
-            # Save admission record
-            # adm = Admission.objects.create(
-            data.name=name
-            data.date_of_birth=dob
-            data.gender=gender
-            data.email=email
-            data.phone=phone
-            data.address=address
-            data.emergency_contact=emergency
-            data.aadhar_number=aadhar
-            data.identity_proof_upload=identity_proof
-            data.photo=photo
-            data.vehicle_type=vehicle_type
-            data.preferred_batch_time=batch
-            
-            data.save()
-            return redirect(adindex)
-        
-        return render(request,'adupdate.html',{'data':data,'data1':data1})
-# ---------delete------------
-def delete(request,id):
-    Admission.objects.get(id=id).delete()
-    
-    return redirect(adindex)
 
 # ---------------- quiz settings----------------
 
@@ -500,7 +518,7 @@ def password_reset_confirm(request, uidb64=None, token=None):
 def password_reset_complete(request):
     return render(request, 'registration/password_reset_complete.html')
 
-#  -------review page -----------
+#  -------review page ----------------------------------
 def review_page(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
@@ -513,11 +531,248 @@ def review_page(request):
 
         reviews = Review.objects.order_by('-created_at')
         return render(request, 'reviewpage.html', {'reviews': reviews})
+    
+# ------------------------attendance --------------------------
 
-#  qstn add page
+
+@csrf_exempt
+def submit_attendance(request):
+    if request.method == 'POST':
+        try:
+            name = int(request.POST.get('student_id'))
+            student = Admission.objects.get(pk=name)
+
+            # Validate date
+            input_date = parse_date(request.POST.get('date'))
+            today = timezone.localdate()
+
+            if input_date and input_date > today:
+                messages.error(request, "You cannot mark attendance for a future date.")
+                return redirect('submit_attendance')
+
+            # Save attendance
+            Attendance.objects.create(
+                student=student,
+                date=input_date,
+                lesson_type=request.POST.get('lesson_type'),
+                time_in=request.POST.get('time_in'),
+                time_out=request.POST.get('time_out'),
+                notes=request.POST.get('notes', '')
+            )
+            messages.success(request, "Attendance marked successfully.")
+            return redirect('records')
+        
+        except (ValueError, Admission.DoesNotExist):
+            messages.error(request, "Invalid student ID.")
+            return redirect('submit_attendance')
+
+    return render(request, 'attendanceform.html', {
+        'today': timezone.localdate().isoformat()
+    })
 
 
 
+def view_records(request):
+    records = Attendance.objects.all().order_by('-date')
+    return render(request, 'attendancerecord.html', {'records': records})
+
+
+# def delete_attendance(request, attendance_id):
+#     if not request.user.is_authenticated:
+#         return redirect('login')  # Redirect to login if not authenticated
+
+#     attendance = get_object_or_404(Attendance, id=attendance_id)
+
+    
+#     if not request.user.is_superuser:
+#         return HttpResponseForbidden("Only superusers can delete attendance records.")
+
+#     attendance.delete()
+#     return redirect(view_records)  # or the attendance list page
+
+
+def weekly_attendance(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    if not Admission.objects.filter(user=request.user).exists():
+        return render(request, 'user_weekly_attendance.html', {
+            'error': 'Admission record not found for this user.'
+        })
+
+    admission = Admission.objects.get(user=request.user)
+
+    today = timezone.now().date()
+    start_week = today - timedelta(days=today.weekday())  # Monday
+    end_week = start_week + timedelta(days=6)             # Sunday
+
+    attendance_records = Attendance.objects.filter(
+        student=admission,
+        date__range=(start_week, end_week)
+    ).order_by('date', 'time_in')
+
+    return render(request, 'user_weekly_attendance.html', {
+        'attendance_records': attendance_records,
+        'start_week': start_week,
+        'end_week': end_week,
+        'today': today,
+    })
+
+#  -------------------profile -----------------------------
+
+
+def view_profile(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    admission = Admission.objects.filter(user=request.user).first()
+
+    if not admission:
+        return render(request, 'profile.html', {
+            'error': 'No admission record found. Please complete your admission.'
+        })
+
+    return render(request, 'profile.html', {'admission': admission})
+
+
+def edit_profile(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    admission = Admission.objects.filter(user=request.user).first()
+    if not admission:
+        # Optionally redirect to admission form or show message
+        return render(request, 'edit_profile.html', {
+            'error': 'No admission record found. Please complete admission first.'
+        })
+
+    if request.method == 'POST':
+        admission.name = request.POST.get('name')
+        admission.date_of_birth = request.POST.get('date_of_birth')
+        admission.gender = request.POST.get('gender')
+        admission.phone = request.POST.get('phone')
+        admission.address = request.POST.get('address')
+        admission.emergency_contact = request.POST.get('emergency_contact')
+        admission.vehicle_type = request.POST.get('vehicle_type')
+        admission.preferred_batch_time = request.POST.get('preferred_batch_time')
+
+        if 'photo' in request.FILES:
+            admission.photo = request.FILES['photo']
+        if 'identity_proof_upload' in request.FILES:
+            admission.identity_proof_upload = request.FILES['identity_proof_upload']
+
+        admission.save()
+        return redirect('view_profile')
+
+    return render(request, 'edit_profile.html', {'admission': admission})
+
+
+# ----------------------- test -------------------
+def add_test(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("Only superusers are allowed to add test details.")
+
+    if request.method == 'POST':
+        adno = request.POST.get('ad_no')
+        if not adno:
+            messages.error(request, "Admission number is required.")
+            return redirect('add_test')
+
+        try:
+            admission = Admission.objects.get(pk=int(adno))
+        except (ValueError, Admission.DoesNotExist):
+            messages.error(request, "Invalid admission number.")
+            return redirect('add_test')
+
+        TestDetails.objects.create(
+            admission=admission,
+            test_type=request.POST.get('test_type'),
+            attempt_number=request.POST.get('attempt_number'),
+            test_date=request.POST.get('test_date'),
+            score=request.POST.get('score'),
+            passed=request.POST.get('passed') == 'true'
+        )
+        messages.success(request, "Test added successfully.")
+        return redirect('test_list')
+
+    return render(request, 'test_form.html', {
+        'form_title': 'Add Test Details',
+        'test': None
+    })
+
+
+
+def edit_test(request, test_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("Only superusers are allowed to edit test details.")
+
+    test = get_object_or_404(TestDetails, id=test_id)
+
+    if request.method == 'POST':
+        test.test_type = request.POST.get('test_type')
+        test.attempt_number = request.POST.get('attempt_number')
+        test.test_date = request.POST.get('test_date')
+        test.score = request.POST.get('score')
+        test.passed = request.POST.get('passed') == 'true'
+        test.save()
+        messages.success(request, "Test details updated successfully.")
+        return redirect('test_list')
+
+    return render(request, 'test_form.html', {
+        'form_title': 'Edit Test Details',
+        'test': test
+    })
+
+
+
+def delete_test(request, test_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("Only superusers are allowed to delete test details.")
+
+    test = get_object_or_404(TestDetails, id=test_id)
+    test.delete()
+    messages.success(request, "Test deleted successfully.")
+    return redirect('test_list')
+
+def test_list(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    if request.user.is_superuser:
+        tests = TestDetails.objects.all().order_by('-test_date')
+    else:
+        admission = get_object_or_404(Admission, user=request.user)
+        tests = admission.tests.all().order_by('-test_date')
+
+    return render(request, 'test_list.html', {'tests': tests})
+
+def test_details(request):
+    if request.user.is_authenticated:
+        try:
+            admission = Admission.objects.get(user=request.user)
+            print("Admission Found:", admission)
+
+            test_results = TestDetails.objects.filter(admission=admission)
+            print("Test Results Count:", test_results.count())
+            for test in test_results:
+                print("Test:", test.test_type, test.test_date, test.score)
+
+        except Admission.DoesNotExist:
+            print("Admission not found.")
+            test_results = []
+
+        return render(request, 'user_test_details.html', {'test_results': test_results})
+    
+    return redirect('login')
 
 
 

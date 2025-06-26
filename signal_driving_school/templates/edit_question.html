@@ -6,18 +6,20 @@
     <link rel="stylesheet" href="{% static 'css/add_question.css' %}">
 </head>
 <body>
-       <div class="main">
-        <div class="nav">
+      <div class="main">
+      <div class="nav">
             <div class="signal"> <h2>signal</h2> </div>
             <div class="sub">
                 {% if user.is_authenticated %}
                 <div class="adindex"><a href="../adindex">Home</a></div>
                 <div class="quizlist"><a href="{% url 'question_list'%}">Question List</a></div>
                 <div class="quizadd"><a href="{% url 'add_question'%}">Add Question</a></div>
-                <!-- <div class=""><a href=""></a></div>
-                <div class=""><a href=""></a></div> -->
                 <div class="logout"><a href="../logout">Logout</a></div>
-                <div class=""><a href=""></a></div>
+                <div class="addtest"><a href="{% url 'add_test'%}">Add test</a></div>
+                <div class="testlist"><a href="{% url 'test_list'%}">Test details list</a></div>
+                <div class="add_attendance"><a href="{% url 'submit_attendance'%}">Add attendance</a></div>
+
+
 
                 {% else %}
                  <div><a href="../">Sign In</a></div>
@@ -25,6 +27,7 @@
                 <div><a href="">Contact Us</a></div>
 
                 {% endif %}
+                 {%if request.user.is_authenticated %}
             </div>
         </div>
     <h2 style="text-align:center;margin-top:10px;margin-right:70px;">Edit Question</h2>

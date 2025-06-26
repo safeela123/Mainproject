@@ -153,24 +153,27 @@
 <body>
 
   <div class="main">
-    <div class="nav">
-      <div class="signal"><h2>Signal</h2></div>
-      <div class="sub">
-        {% if user.is_authenticated %}
-          <div><a href="../admission">Admission</a></div>
-          <div><a href="">Section</a></div>
-          <div><a href="{% url 'quiz' %}">Quiz</a></div>
-          <div><a href="{% url 'send_email' %}">Contact Us</a></div>
-          <div><a href="{% url 'review_page' %}">Review</a></div>
-          <div><a href="../logout">Logout</a></div>
-          <!-- <div><a href="#">Profile</a></div> -->
-        {% else %}
-          <div><a href="../">Sign In</a></div>
-          <div><a href="../register">Sign Up</a></div>
-          <div><a href="{% url 'send_email' %}">Contact Us</a></div>
-        {% endif %}
-      </div>
-    </div>
+     <div class="nav">
+            <div class="signal"> <h2>signal</h2> </div>
+            <div class="sub">
+                {% if user.is_authenticated %}
+                <div class="admission"><a href="../admission">Admission</a></div>
+                <div class="section"><a href="{%url 'user_test_details'%}">Test details</a></div>
+                <div class="attendance"><a href="{%url 'user_attendance'%}">Attendance</a></div>
+                <div class="quiz"><a href="{% url 'quiz' %}">Quiz</a></div>
+                <div class="review"><a href="{% url 'review_page'%}">review</a></div>
+                <div class="contact"><a href="{% url 'send_email' %}">Contact Us</a></div>
+                <div class="logout"><a href="../logout">Logout</a></div>
+                <div class="profile"><a href="{% url 'view_profile'%}">Profile</a></div>
+
+                {% else %}
+                 <div><a href="../">Sign In</a></div>
+                <div><a href="../register">Sign Up</a></div>
+                <div><a href="">Contact Us</a></div>
+
+                {% endif %}
+            </div>
+        </div>
 
     <div class="quiz-container">
         <h2>Question {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</h2>
@@ -203,7 +206,7 @@
             Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
         </div>
     </div>
-
+</div>
  <footer style="background:#222; color:#eee; padding:40px 20px; text-align:center; font-family: Arial, sans-serif;">
   <div style="max-width:1000px; margin:0 auto; display:flex; flex-wrap:wrap; justify-content:space-between; gap:20px;">
     

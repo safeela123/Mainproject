@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ form_title }}</title>
+    <style>
+        /* Basic responsive styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f9f9f9;
+        }
+        .container {
+          margin-top:5%;
+            max-width: 480px;
+            margin: auto;
+            background: #fff;
+            padding: 25px 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: 600;
+            color: #444;
+        }
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 9px 10px;
+            margin-top: 6px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        button {
+            margin-top: 25px;
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 13px 0;
+            font-size: 1.1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .cancel-btn {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #666;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .cancel-btn:hover {
+            text-decoration: underline;
+            color: #444;
+        }
+
+        /* Responsive tweaks */
+        @media (max-width: 500px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+        }
+
+        
+.main {
+  width: 100%;
+}
+
+.nav {
+  background-color:red;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items:center;margin-top:0px;
+}
+
+.nav a {
+  text-decoration: none;
+  color: black;
+  margin: 0 10px;
+}
+
+.signal {
+  
+  font-weight: bold;
+  color: black;
+}
+
+.sub {
+  
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  width:80%;
+}
+
+/* Medium and smaller tablets */
+@media screen and (max-width: 768px)and(min-width:481px) {
+  .nav {
+    width:100%;
+    justify-content:space-between;
+    align-items: center;
+  }
+
+  .sub {
+    flex-direction: column;
+    width: 100%;
+    padding-top: 10px;
+  }
+
+  .nav a {
+    font-size: 16px;
+    margin: 5px 0;
+  }
+
+  
+}
+
+/* Small mobile screens */
+@media screen and (max-width: 480px) {
+  .nav {
+    padding: 10px;
+  }
+
+  .nav a {
+    font-size: 14px;
+  }
+
+  .sub {
+    gap: 8px;
+  }
+
+}
+
+/* Large screens */
+@media screen and (min-width: 1025px) {
+
+  .nav a {
+    font-size: 18px;
+  }
+}
+
+    </style>
+</head>
+<body>
+     <div class="main">
+      <div class="nav">
+            <div class="signal"> <h2>signal</h2> </div>
+            <div class="sub">
+                {% if user.is_authenticated %}
+                <div class="adindex"><a href="../adindex">Home</a></div>
+                <div class="quizlist"><a href="{% url 'question_list'%}">Question List</a></div>
+                <div class="quizadd"><a href="{% url 'add_question'%}">Add Question</a></div>
+                <div class="logout"><a href="../logout">Logout</a></div>
+                <div class="addtest"><a href="{% url 'add_test'%}">Add test</a></div>
+                <div class="testlist"><a href="{% url 'test_list'%}">Test list</a></div>
+                <div class="add_attendance"><a href="{% url 'submit_attendance'%}">Add attendance</a></div>
+
+
+
+                {% else %}
+                 <div><a href="../">Sign In</a></div>
+                <div><a href="../register">Sign Up</a></div>
+                <div><a href="">Contact Us</a></div>
+
+                {% endif %}
+                 {%if request.user.is_authenticated %}
+            </div>
+        </div>
+<div class="container">
+    <h2>{{ form_title }}</h2>
+    <form method="POST">
+        {% csrf_token %}
+
+        {% if not test %}
+        <label for="name">Admission Number</label>
+        <input
+            type="number"
+            id="name"
+            name="ad_no"
+            required
+            placeholder="Enter admission number"
+        />
+        {% endif %}
+
+        <label for="test_type">Test Type</label>
+        <select id="test_type" name="test_type" required>
+            <option value="">-- Select Test Type --</option>
+            <option value="theory" {% if test and test.test_type == "theory" %}selected{% endif %}>Theory Test</option>
+            <option value="practical" {% if test and test.test_type == "practical" %}selected{% endif %}>Practical Test</option>
+        </select>
+
+        <label for="attempt_number">Attempt Number</label>
+        <input
+            type="number"
+            id="attempt_number"
+            name="attempt_number"
+            min="1"
+            required
+            value="{% if test %}{{ test.attempt_number }}{% endif %}"
+            placeholder="Enter attempt number"
+        />
+
+        <label for="test_date">Test Date</label>
+        <input
+            type="date"
+            id="test_date"
+            name="test_date"
+            required
+            value="{% if test %}{{ test.test_date|date:'Y-m-d' }}{% endif %}"
+        />
+
+        <label for="score">Score</label>
+        <input
+            type="number"
+            id="score"
+            name="score"
+            min="0"
+            max="100"
+            required
+            value="{% if test %}{{ test.score }}{% endif %}"
+            placeholder="Enter score (0–100)"
+        />
+
+        <label for="passed">Passed</label>
+        <select id="passed" name="passed" required>
+            <option value="">-- Select Result --</option>
+            <option value="true" {% if test and test.passed %}selected{% endif %}>Yes</option>
+            <option value="false" {% if test and not test.passed %}selected{% endif %}>No</option>
+        </select>
+
+        <button type="submit">
+            {% if test %}Save Changes{% else %}Add Test{% endif %}
+        </button>
+    </form>
+
+    <a href="{% url 'test_list' %}" class="cancel-btn">Cancel</a>
+    {% endif %}
+</div>
+</div>
+</body>
+</html>
